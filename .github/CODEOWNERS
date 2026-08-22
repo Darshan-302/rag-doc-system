@@ -1,0 +1,32 @@
+# This file specifies who reviews code changes
+# For more information, see GitHub's documentation:
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default code owner - reviews all pull requests
+* @Darshan-302
+
+# Infrastructure and deployment
+/docker-compose.yml @Darshan-302
+/Dockerfile @Darshan-302
+/.github/ @Darshan-302
+/infra/ @Darshan-302
+
+# Core RAG system
+/src/rag/ @Darshan-302
+/src/api/ @Darshan-302
+/src/config.py @Darshan-302
+
+# Configuration
+/config/ @Darshan-302
+/.env.example @Darshan-302
+
+# Documentation
+/docs/ @Darshan-302
+/README.md @Darshan-302
+/CONTRIBUTING.md @Darshan-302
+
+# Tests
+/tests/ @Darshan-302
+
+# Scripts
+/scripts/ @Darshan-302

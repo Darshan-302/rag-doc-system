@@ -357,20 +357,17 @@ docker-compose up -d    # Restart
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Cloud deployment guides
 - [TUNING.md](docs/TUNING.md) - Performance optimization
 
-## 💼 Commercial Licensing
-
-This system is designed for commercial use. Pricing models:
-
-- **Consumption-based**: $1.50 per 1M tokens
-- **Seat-based**: Per concurrent user
-- **Hybrid**: Monthly minimum + overage
-
-Contact sales@company.com for enterprise licensing.
-
 ## 📄 License
 
-Commercial License - See LICENSE.md for details
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+### MIT License Summary
+- ✅ Free for personal and commercial use
+- ✅ Can modify and distribute
+- ✅ Can use in private projects
+- ❌ No warranty or liability
+- ❌ Must include license copy
 
 ---
 
-**Questions?** Open an issue or contact the team at support@company.com
+**Questions?** Open an issue or contact @Darshan-302
