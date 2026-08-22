@@ -1,0 +1,34 @@
+{
+  "policies": [
+    {
+      "id": "policy_001",
+      "name": "Health Insurance Coverage Basics",
+      "content": "\n                        Health insurance is a contract between an individual and an insurance company.\n\n                        Key terms:\n                        - Premium: Monthly payment for insurance\n                        - Deductible: Amount you pay before insurance covers costs\n                        - Copay: Fixed amount for each service\n                        - Coinsurance: Percentage you pay for covered services\n\n                        Types of coverage:\n                        1. HMO (Health Maintenance Organization)\n                        2. PPO (Preferred Provider Organization)\n                        3. EPO (Exclusive Provider Organization)\n                        4. POS (Point of Service)\n                        ",
+      "category": "Health Insurance"
+    },
+    {
+      "id": "policy_002",
+      "name": "Pre-existing Conditions",
+      "content": "\n                        A pre-existing condition is any health problem that existed before\n                        the health insurance coverage began.\n\n                        Key points:\n                        - Cannot be denied coverage due to pre-existing conditions (ACA requirement)\n                        - No waiting periods for pre-existing conditions\n                        - No exclusions for pre-existing conditions\n                        - Cannot charge more based on pre-existing conditions\n                        ",
+      "category": "Coverage Rules"
+    },
+    {
+      "id": "policy_003",
+      "name": "Claim Process",
+      "content": "\n                        Steps to file an insurance claim:\n\n                        1. Receive medical service from in-network provider\n                        2. Provider submits claim to insurance company\n                        3. Insurance reviews claim for eligibility\n                        4. Insurance determines patient's responsibility\n                        5. Explanation of Benefits (EOB) is sent to patient\n                        6. Patient pays their portion (copay, coinsurance, deductible)\n                        7. Provider receives reimbursement from insurance\n\n                        Average claim processing time: 3-5 business days\n                        ",
+      "category": "Claims"
+    },
+    {
+      "id": "policy_004",
+      "name": "Drug Coverage (Formulary)",
+      "content": "\n                        A formulary is a list of medications covered by your insurance plan.\n\n                        Medication tiers:\n                        - Tier 1: Generic drugs (lowest cost)\n                        - Tier 2: Preferred brand-name drugs (moderate cost)\n                        - Tier 3: Non-preferred brand-name drugs (higher cost)\n                        - Tier 4: Specialty drugs (highest cost)\n\n                        Coverage may require:\n                        - Prior authorization from doctor\n                        - Trying generic version first (step therapy)\n                        - Maximum quantity per prescription\n                        ",
+      "category": "Prescription Coverage"
+    },
+    {
+      "id": "policy_005",
+      "name": "Network Providers",
+      "content": "\n                        In-network vs Out-of-network providers:\n\n                        In-Network:\n                        - Negotiated rates with insurance company\n                        - Lower out-of-pocket costs\n                        - Counts toward deductible\n\n                        Out-of-Network:\n                        - No negotiated rates\n                        - Higher out-of-pocket costs (usually 30-50% more)\n                        - May not count toward deductible\n\n                        Emergency care is usually covered regardless of network status.\n                        ",
+      "category": "Provider Network"
+    }
+  ]
+}

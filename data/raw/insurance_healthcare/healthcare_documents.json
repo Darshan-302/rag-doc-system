@@ -1,0 +1,64 @@
+{
+  "documents": [
+    {
+      "id": "health_001",
+      "title": "Understanding Health Insurance Coverage",
+      "category": "Health Insurance",
+      "content": "Health insurance is a contract between you and an insurance company that\n                    helps pay for medical care. There are different types of health insurance plans including\n                    HMO, PPO, EPO, and POS plans. Each plan type has different rules about which doctors and\n                    hospitals you can use and how much you'll pay for care. A deductible is the amount you must\n                    pay out of your own pocket before your insurance starts to pay. A copay is a fixed amount\n                    you pay for a specific service. Coinsurance is a percentage of the cost you pay after meeting\n                    your deductible."
+    },
+    {
+      "id": "health_002",
+      "title": "Pre-existing Conditions and Coverage",
+      "category": "Health Insurance",
+      "content": "A pre-existing condition is any health problem that existed before your\n                    health insurance coverage began. Under the Affordable Care Act (ACA), health insurance\n                    companies cannot deny you coverage or charge you more because of a pre-existing condition.\n                    This includes diabetes, heart disease, asthma, and cancer. You cannot be excluded from\n                    coverage or have coverage limitations because of a pre-existing condition. Insurance\n                    companies also cannot require a waiting period before covering your pre-existing condition."
+    },
+    {
+      "id": "health_003",
+      "title": "How to File an Insurance Claim",
+      "category": "Claims Process",
+      "content": "To file an insurance claim: 1) Get medical services from an in-network\n                    provider. 2) Your provider submits the claim to your insurance company. 3) The insurance\n                    company reviews the claim for eligibility. 4) They determine how much they will pay.\n                    5) You receive an Explanation of Benefits (EOB) showing what was covered. 6) You pay your\n                    portion including copay, coinsurance, and deductible. 7) Your provider receives payment.\n                    Most claims are processed within 3-5 business days. Out-of-network claims may take longer."
+    },
+    {
+      "id": "health_004",
+      "title": "Prescription Drug Coverage and Formularies",
+      "category": "Prescription Coverage",
+      "content": "A formulary is a list of medications covered by your insurance plan.\n                    Medications are typically organized into tiers. Tier 1 includes generic drugs with the\n                    lowest cost. Tier 2 includes preferred brand-name drugs with moderate cost. Tier 3 includes\n                    non-preferred brand-name drugs with higher cost. Tier 4 includes specialty drugs with the\n                    highest cost. Some medications may require prior authorization from your doctor or may have\n                    quantity limitations. You may need to try a generic version first before your insurance\n                    covers the brand-name version."
+    },
+    {
+      "id": "health_005",
+      "title": "In-Network vs Out-of-Network Providers",
+      "category": "Provider Network",
+      "content": "In-network providers have negotiated rates with your insurance company,\n                    resulting in lower out-of-pocket costs. Out-of-network providers don't have negotiated rates\n                    and your costs are typically 30-50% higher. In-network care counts toward your deductible and\n                    out-of-pocket maximum. Out-of-network care may not count toward these limits. Emergency care\n                    is usually covered regardless of network status. Check your insurance provider's website for\n                    a list of in-network doctors and hospitals."
+    },
+    {
+      "id": "health_006",
+      "title": "Understanding Deductibles and Out-of-Pocket Maximums",
+      "category": "Coverage Terms",
+      "content": "A deductible is the amount you must pay for health care services before\n                    your insurance company starts to pay its share. For example, with a $1,500 deductible, you\n                    pay the first $1,500 of covered services. After you meet your deductible, you usually pay\n                    a copay for visits and coinsurance for other services. Your out-of-pocket maximum is the\n                    most you have to pay in a year. Once you reach your out-of-pocket maximum, your insurance\n                    company pays 100% of covered services for the rest of the year."
+    },
+    {
+      "id": "health_007",
+      "title": "Preventive Care and Wellness Benefits",
+      "category": "Benefits",
+      "content": "Many health insurance plans cover preventive care services at no cost to you,\n                    including annual wellness visits, screenings, and vaccinations. These include colonoscopies,\n                    mammograms, blood pressure checks, cholesterol screenings, and flu shots. Preventive care is\n                    covered before you meet your deductible. Staying up-to-date with preventive care can help\n                    catch health problems early and reduce overall healthcare costs. Ask your doctor which\n                    preventive services are recommended for you based on your age and health history."
+    },
+    {
+      "id": "health_008",
+      "title": "Emergency Room and Urgent Care Coverage",
+      "category": "Emergency Care",
+      "content": "Emergency room care is covered for serious health conditions that require\n                    immediate treatment, such as severe injuries, chest pain, or difficulty breathing. Emergency\n                    care is usually covered even if you use an out-of-network facility. Urgent care centers provide\n                    treatment for non-life-threatening illnesses and injuries that can't wait for a regular doctor's\n                    appointment. The cost of urgent care is typically lower than emergency room care. Always contact\n                    your insurance company as soon as possible after an emergency visit."
+    },
+    {
+      "id": "health_009",
+      "title": "Mental Health and Behavioral Health Coverage",
+      "category": "Mental Health",
+      "content": "Most health insurance plans cover mental health services including therapy,\n                    counseling, and psychiatric care. Coverage typically includes office visits, group therapy,\n                    hospital stays, and prescription medications for mental health conditions. You may need a\n                    referral from your primary care doctor to see a mental health specialist. Some plans have\n                    limits on the number of therapy visits covered per year. Mental health coverage must be provided\n                    equally with physical health coverage under parity laws."
+    },
+    {
+      "id": "health_010",
+      "title": "Maternity and Newborn Care Coverage",
+      "category": "Family Planning",
+      "content": "Health insurance plans must cover maternity and newborn care services. Coverage\n                    includes prenatal care, labor and delivery, hospital stay, and postpartum care. Preventive\n                    services like prenatal vitamins and screening tests are covered with no copay. Newborn care\n                    includes hospital stays, vaccinations, and screening tests. If you're planning to have a baby,\n                    notify your insurance company and make sure your doctor is in-network. Some plans have maternity\n                    waiting periods, though this is less common after the ACA."
+    }
+  ]
+}

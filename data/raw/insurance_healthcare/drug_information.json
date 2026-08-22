@@ -1,0 +1,49 @@
+{
+  "drugs": [
+    {
+      "id": "drug_001",
+      "name": "Lisinopril",
+      "class": "ACE Inhibitor",
+      "use": "Treatment of high blood pressure and heart failure",
+      "side_effects": "Dizziness, cough, hyperkalemia",
+      "contraindications": "Pregnancy, angioedema, severe kidney disease",
+      "fda_approval": "Approved for hypertension and heart failure"
+    },
+    {
+      "id": "drug_002",
+      "name": "Metformin",
+      "class": "Biguanide",
+      "use": "Treatment of type 2 diabetes mellitus",
+      "side_effects": "Gastrointestinal upset, metallic taste, vitamin B12 deficiency",
+      "contraindications": "Severe kidney disease, metabolic acidosis",
+      "fda_approval": "First-line treatment for type 2 diabetes"
+    },
+    {
+      "id": "drug_003",
+      "name": "Atorvastatin",
+      "class": "Statin",
+      "use": "Reduction of cholesterol and prevention of heart disease",
+      "side_effects": "Muscle pain, liver problems, memory issues",
+      "contraindications": "Active liver disease, pregnancy",
+      "fda_approval": "Approved for hypercholesterolemia and cardiovascular disease"
+    },
+    {
+      "id": "drug_004",
+      "name": "Sertraline",
+      "class": "SSRI",
+      "use": "Treatment of depression, anxiety, and PTSD",
+      "side_effects": "Sexual dysfunction, insomnia, weight changes",
+      "contraindications": "MAOI use, bipolar disorder, angle-closure glaucoma",
+      "fda_approval": "Approved for depression, panic disorder, PTSD, OCD"
+    },
+    {
+      "id": "drug_005",
+      "name": "Omeprazole",
+      "class": "Proton Pump Inhibitor",
+      "use": "Reduction of stomach acid for GERD and ulcers",
+      "side_effects": "Headache, B12 deficiency, fractures with long-term use",
+      "contraindications": "Long-term use with certain medications",
+      "fda_approval": "Approved for GERD and peptic ulcer disease"
+    }
+  ]
+}

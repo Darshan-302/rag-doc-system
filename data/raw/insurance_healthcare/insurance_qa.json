@@ -1,0 +1,79 @@
+{
+  "qa_pairs": [
+    {
+      "id": "qa_001",
+      "question": "What is health insurance?",
+      "answer": "Health insurance is a contract that helps pay for medical care and hospital stays. It protects you from high medical bills."
+    },
+    {
+      "id": "qa_002",
+      "question": "What is a deductible?",
+      "answer": "A deductible is the amount you must pay for health care services before your insurance starts to pay."
+    },
+    {
+      "id": "qa_003",
+      "question": "What is a copay?",
+      "answer": "A copay is a fixed amount you pay for a specific healthcare service, like a doctor visit or prescription."
+    },
+    {
+      "id": "qa_004",
+      "question": "What types of health insurance plans exist?",
+      "answer": "The main types are HMO, PPO, EPO, and POS plans. Each has different rules about which doctors you can see and how much you pay."
+    },
+    {
+      "id": "qa_005",
+      "question": "Can insurance deny coverage for pre-existing conditions?",
+      "answer": "No. Under the Affordable Care Act, insurance cannot deny coverage or charge more because of pre-existing conditions."
+    },
+    {
+      "id": "qa_006",
+      "question": "How long does a claim take to process?",
+      "answer": "Most insurance claims are processed within 3-5 business days. Out-of-network claims may take longer."
+    },
+    {
+      "id": "qa_007",
+      "question": "What is an out-of-pocket maximum?",
+      "answer": "It's the most you have to pay in a year. Once you reach it, your insurance covers 100% of covered services."
+    },
+    {
+      "id": "qa_008",
+      "question": "Is emergency care covered?",
+      "answer": "Yes, emergency care is covered even if you use an out-of-network facility for serious health conditions."
+    },
+    {
+      "id": "qa_009",
+      "question": "What is coinsurance?",
+      "answer": "Coinsurance is the percentage of costs you pay after meeting your deductible. For example, you might pay 20% and insurance pays 80%."
+    },
+    {
+      "id": "qa_010",
+      "question": "Are mental health services covered?",
+      "answer": "Yes, most plans cover mental health services including therapy, counseling, and psychiatric care equally with physical health."
+    },
+    {
+      "id": "qa_011",
+      "question": "How do I find in-network doctors?",
+      "answer": "Check your insurance company's website for a provider directory. You can search by specialty, location, and availability."
+    },
+    {
+      "id": "qa_012",
+      "question": "What is a formulary?",
+      "answer": "A formulary is a list of medications covered by your insurance plan, organized by cost tiers."
+    },
+    {
+      "id": "qa_013",
+      "question": "Do I need a referral to see a specialist?",
+      "answer": "It depends on your plan type. PPO plans don't require referrals, but HMO and POS plans typically do."
+    },
+    {
+      "id": "qa_014",
+      "question": "Are preventive services covered?",
+      "answer": "Yes, preventive services like vaccines and screenings are covered with no copay before you meet your deductible."
+    },
+    {
+      "id": "qa_015",
+      "question": "What is an EOB?",
+      "answer": "An Explanation of Benefits (EOB) is a statement showing what your insurance covered, what you owe, and claim details."
+    }
+  ]
+}

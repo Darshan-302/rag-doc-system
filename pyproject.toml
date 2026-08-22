@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "rag-system"
+version = "0.1.0"
+description = "Commercial RAG pipeline for document retrieval and generation"
+authors = ["Your Team <team@company.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.0"
+uvicorn = "^0.24.0"
+pydantic = "^2.4.0"
+pydantic-settings = "^2.0.0"
+
+# LLM & Embeddings
+sentence-transformers = "^2.2.0"
+transformers = "^4.35.0"
+
+# Vector Database
+weaviate-client = "^4.0.0"
+
+# Document Processing
+pypdf = "^3.17.0"
+python-docx = "^0.8.11"
+
+# Database
+sqlalchemy = "^2.0.0"
+psycopg2-binary = "^2.9.0"
+
+# Cache
+redis = "^5.0.0"
+
+# Search & Ranking
+rank-bm25 = "^0.2.0"
+
+# Utilities
+python-dotenv = "^1.0.0"
+tqdm = "^4.66.0"
+httpx = "^0.25.0"
+requests = "^2.31.0"
+pyyaml = "^6.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+black = "^23.11.0"
+ruff = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

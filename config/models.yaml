@@ -1,0 +1,56 @@
+# LLM Model Configurations
+llm_models:
+  mistral:
+    name: "Mistral 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+
+  qwen:
+    name: "Qwen 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+
+  qwen_32b:
+    name: "Qwen 32B"
+    size: "65GB"
+    context_length: 32000
+    parameters: 32000000000
+    speed: "moderate"
+    quality: "superior"
+
+  llama2:
+    name: "Llama 2 7B"
+    size: "15GB"
+    context_length: 4096
+    parameters: 7000000000
+    speed: "fast"
+    quality: "good"
+
+# Embedding Model Configurations
+embedding_models:
+  bge_large:
+    name: "BGE Large EN v1.5"
+    dimensions: 1024
+    size: "0.3GB"
+    speed: "very_fast"
+    quality: "excellent"
+
+  nomic_embed:
+    name: "Nomic Embed Text"
+    dimensions: 768
+    size: "0.2GB"
+    speed: "very_fast"
+    quality: "very_good"
+
+# Reranker Model Configurations
+reranker_models:
+  bge_reranker:
+    name: "BGE Reranker Large"
+    size: "0.5GB"
+    use_for: "cross_encoder_ranking"

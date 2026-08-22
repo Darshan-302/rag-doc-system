@@ -1,0 +1,52 @@
+# Chunking Strategies for Different Document Types
+
+default_strategy:
+  name: "semantic_chunking"
+  chunk_size: 512
+  chunk_overlap: 50
+  min_chunk_size: 100
+
+strategies:
+  healthcare_documents:
+    name: "Healthcare Document Chunking"
+    chunk_size: 512
+    chunk_overlap: 50
+    split_by: "sentences"
+    description: "Optimized for medical documents with complex terminology"
+
+  insurance_policies:
+    name: "Insurance Policy Chunking"
+    chunk_size: 256
+    chunk_overlap: 30
+    split_by: "paragraphs"
+    description: "Shorter chunks for legal/policy documents"
+
+  clinical_trials:
+    name: "Clinical Trial Data Chunking"
+    chunk_size: 1024
+    chunk_overlap: 100
+    split_by: "sections"
+    description: "Larger chunks for structured trial data"
+
+  qa_pairs:
+    name: "Q&A Pair Chunking"
+    chunk_size: 256
+    chunk_overlap: 0
+    split_by: "pairs"
+    description: "No overlap for Q&A to preserve context"
+
+  research_papers:
+    name: "Research Paper Chunking"
+    chunk_size: 768
+    chunk_overlap: 80
+    split_by: "sections"
+    description: "Medium chunks for academic papers"
+
+token_counting:
+  method: "tiktoken"
+  model: "gpt2"  # Approximation for non-OpenAI models
+
+overlap_types:
+  sliding_window: "word-level overlap between chunks"
+  paragraph_overlap: "maintain paragraph boundaries"
+  semantic_overlap: "overlap sentences with meaning preservation"

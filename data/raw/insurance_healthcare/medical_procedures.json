@@ -1,0 +1,64 @@
+{
+  "procedures": [
+    {
+      "id": "proc_001",
+      "name": "Colonoscopy",
+      "description": "A screening procedure to examine the large intestine for polyps or cancer. Recommended for adults 45 and older.",
+      "coverage": "Preventive care - covered with no copay"
+    },
+    {
+      "id": "proc_002",
+      "name": "Mammography",
+      "description": "Breast imaging procedure used to detect breast cancer. Recommended annually for women 40 and older.",
+      "coverage": "Preventive care - covered with no copay"
+    },
+    {
+      "id": "proc_003",
+      "name": "Blood Pressure Check",
+      "description": "Basic screening to measure blood pressure and detect hypertension. Covered as preventive care.",
+      "coverage": "Preventive care - covered with no copay"
+    },
+    {
+      "id": "proc_004",
+      "name": "Cholesterol Screening",
+      "description": "Blood test to measure cholesterol levels. Recommended for early detection of heart disease risk.",
+      "coverage": "Preventive care - covered with no copay"
+    },
+    {
+      "id": "proc_005",
+      "name": "Influenza Vaccination",
+      "description": "Annual flu shot to prevent influenza infection. Recommended for all individuals 6 months and older.",
+      "coverage": "Preventive care - covered with no copay"
+    },
+    {
+      "id": "proc_006",
+      "name": "MRI Scan",
+      "description": "Imaging procedure using magnetic fields to create detailed images of soft tissues.",
+      "coverage": "Requires deductible and coinsurance; may need prior authorization"
+    },
+    {
+      "id": "proc_007",
+      "name": "CT Scan",
+      "description": "Computed tomography scan using X-rays to create cross-sectional images.",
+      "coverage": "Requires deductible and coinsurance; may need prior authorization"
+    },
+    {
+      "id": "proc_008",
+      "name": "Physical Therapy",
+      "description": "Treatment to restore function and reduce pain after injury or surgery.",
+      "coverage": "Typically requires referral and has session limits"
+    },
+    {
+      "id": "proc_009",
+      "name": "Joint Replacement Surgery",
+      "description": "Surgical procedure to replace damaged joints, commonly done for knee or hip arthritis.",
+      "coverage": "Requires hospitalization costs and surgical facility fees"
+    },
+    {
+      "id": "proc_010",
+      "name": "Cardiac Stress Test",
+      "description": "Test to evaluate heart function during exercise. Used to diagnose heart conditions.",
+      "coverage": "Requires deductible and coinsurance; may need prior authorization"
+    }
+  ]
+}
