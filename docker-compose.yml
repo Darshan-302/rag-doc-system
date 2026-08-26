@@ -16,6 +16,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    resources:
+      limits:
+        memory: 2G
+        cpus: "2"
+      reservations:
+        memory: 1G
+        cpus: "1"
 
   # Redis Cache
   redis:
@@ -30,6 +37,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    resources:
+      limits:
+        memory: 2G
+        cpus: "1"
+      reservations:
+        memory: 1G
+        cpus: "0.5"
 
   # Weaviate Vector Database
   weaviate:
@@ -51,6 +65,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    resources:
+      limits:
+        memory: 4G
+        cpus: "2"
+      reservations:
+        memory: 2G
+        cpus: "1"
 
   # Ollama - Local LLM & Embedding Engine
   ollama:
@@ -65,6 +86,20 @@ services:
     # Note: Pull models manually or use init script
     # docker exec rag_ollama ollama pull mistral:latest
     # docker exec rag_ollama ollama pull nomic-embed-text:latest
+    resources:
+      limits:
+        memory: 32G
+        cpus: "8"
+      reservations:
+        memory: 16G
+        cpus: "4"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   # MinIO - S3-compatible Object Storage
   minio:
@@ -84,6 +119,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    resources:
+      limits:
+        memory: 2G
+        cpus: "2"
+      reservations:
+        memory: 1G
+        cpus: "1"
 
   # Note: API runs locally via: python -m uvicorn src.main:app --reload
   # All infrastructure services (PostgreSQL, Redis, Weaviate, etc.) run here in Docker
