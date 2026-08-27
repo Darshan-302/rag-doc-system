@@ -4,20 +4,37 @@ A production-ready, multi-tenant Retrieval-Augmented Generation (RAG) platform f
 
 ## 🎯 Features
 
-- **Local LLM Inference**: Mistral-34B or Llama-3-34B (no cloud dependency, full privacy)
+- **Local LLM Inference**: Multiple model support (7B to 34B parameters, no cloud dependency, full privacy)
 - **Multi-Format Document Support**: PDF, DOCX, CSV, TXT, JSON, images (with OCR)
 - **Semantic + Keyword Search**: Hybrid retrieval with BM25 + vector embeddings
 - **Multi-Tenancy**: Complete tenant isolation with JWT-based auth
 - **Scalable Architecture**: Supports MVP (10K docs) → Enterprise (1M+ docs)
 - **Commercial-Ready**: GDPR, HIPAA, SOC2 compliance framework
-- **Fast Retrieval**: <2-3 seconds end-to-end query latency
+- **Fast Retrieval**: <2-3 seconds end-to-end query latency (varies by model)
 - **Source Attribution**: Automatic citation of retrieved documents
+- **Resource Management**: Automatic memory limits and resource allocation
+
+## 📋 Supported LLM Models
+
+| Model | Size | VRAM | Speed | Quality | Use Case | Quantization |
+|-------|------|------|-------|---------|----------|--------------|
+| Qwen 7B | 15GB | 8GB | ⚡⚡⚡ | Good | Development, MVP | fp16, int8, int4 |
+| Mistral 7B | 15GB | 8GB | ⚡⚡⚡ | Good | Development, MVP | fp16, int8, int4 |
+| Llama-2 13B | 26GB | 14GB | ⚡⚡ | Good | Small production | fp16, int8 |
+| Qwen 14B | 26GB | 16GB | ⚡⚡ | Excellent | Production | fp16, int8 |
+| Qwen 32B | 65GB | 32GB | ⚡ | Superior | Enterprise | fp16, int8, int4 |
+| Mistral 34B | 70GB | 40GB | ⚡ | Excellent | Enterprise | fp16, int8 |
+
+**Quantization Benefits** (reduce VRAM requirements):
+- int4: 75% reduction in VRAM usage
+- int8: 50% reduction in VRAM usage
+- fp16: Full precision (no reduction)
 
 ## 📋 Tech Stack
 
 | Component | Choice | Rationale |
 |-----------|--------|-----------|
-| **LLM** | Mistral-34B (via Ollama) | Best balance of speed/quality/commercial licensing |
+| **LLM** | Configurable (7B-34B models) | Choose based on hardware and quality needs |
 | **Embeddings** | BGE Large EN v1.5 | 1024-dim, optimized retrieval, 0.3B params |
 | **Vector DB** | Weaviate | Native multi-tenancy, hybrid search, self-hostable |
 | **Document Store** | PostgreSQL + MinIO | Enterprise-standard, scalable architecture |
@@ -30,9 +47,29 @@ A production-ready, multi-tenant Retrieval-Augmented Generation (RAG) platform f
 
 ### Prerequisites
 
+**Minimum (Development)**
 - Docker & Docker Compose
-- 8GB+ RAM
-- GPU (optional but recommended): RTX 3090 / A100 for LLM inference
+- 24GB+ RAM (for full stack)
+- Storage: 100GB+ for models and data
+
+**Recommended (Production)**
+- Docker & Docker Compose
+- 48GB+ RAM (for optimal performance)
+- GPU: NVIDIA RTX 3090 / A100 / 4090 for LLM inference
+- Storage: 500GB+ SSD for models and scaling
+
+**By LLM Model Size**
+- **7B Models** (Mistral, Qwen): 16GB RAM minimum
+- **14B Models** (Qwen): 24GB RAM minimum
+- **32B Models** (Qwen): 48GB RAM recommended
+- **34B Models** (Mistral): 48GB+ RAM
+
+**Resource Allocation** (configured in docker-compose.yml)
+- Ollama: 32GB limit / 16GB reservation
+- Weaviate: 4GB limit / 2GB reservation
+- PostgreSQL: 2GB limit / 1GB reservation
+- Redis: 2GB limit / 1GB reservation
+- MinIO: 2GB limit / 1GB reservation
 
 ### 1. Clone & Setup
 
@@ -49,13 +86,29 @@ docker-compose ps
 
 ### 2. Download Models
 
-```bash
-# Download Mistral LLM
-docker exec rag_ollama ollama pull mistral:latest
+**Choose a model based on your available RAM:**
 
-# Download embedding model
+```bash
+# For 16GB RAM (Development)
+docker exec rag_ollama ollama pull qwen:7b
+docker exec rag_ollama ollama pull nomic-embed-text:latest
+
+# For 32GB RAM (Recommended)
+docker exec rag_ollama ollama pull qwen:14b
+docker exec rag_ollama ollama pull nomic-embed-text:latest
+
+# For 48GB+ RAM (High Quality)
+docker exec rag_ollama ollama pull qwen:32b
 docker exec rag_ollama ollama pull nomic-embed-text:latest
 ```
+
+**Model Sizes** (after download):
+- 7B models: ~15GB
+- 14B models: ~26GB
+- 32B models: ~65GB
+- Embedding model: ~0.3GB
+
+See **Supported LLM Models** section above for detailed specs.
 
 ### 3. Initialize Database
 
