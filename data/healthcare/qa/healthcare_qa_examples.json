@@ -1,0 +1,49 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "synthetic": true,
+  "source_note": "Patient references below use obviously fictional IDs/names. Used as the source examples for docs/HEALTHCARE_EXAMPLES.md.",
+  "qa_examples": [
+    {
+      "id": "qa_synth_001",
+      "patient_ref": "PT-SYNTH-0001 (Jordan Testpatient, fictional)",
+      "query": "What is hypertension and how is it generally managed?",
+      "expected_source_docs": ["guideline_synth_001"],
+      "answer_style": "informational, cites source, includes medical disclaimer"
+    },
+    {
+      "id": "qa_synth_002",
+      "patient_ref": "PT-SYNTH-0002 (Alex Sampleford, fictional)",
+      "query": "Could Synthovas-A and Glucomend-X interact, based on the sample interaction data?",
+      "expected_source_docs": ["drug_interactions_sample.json"],
+      "answer_style": "informational, flags synthetic data, recommends pharmacist/prescriber consult"
+    },
+    {
+      "id": "qa_synth_003",
+      "patient_ref": "PT-SYNTH-0003 (Riley Exampleton, fictional)",
+      "query": "Am I eligible for the fictional trial SYNTH-TRIAL-001?",
+      "expected_source_docs": ["clinical_trials_sample.json"],
+      "answer_style": "informational, lists illustrative eligibility criteria, directs to real trial verification"
+    },
+    {
+      "id": "qa_synth_004",
+      "patient_ref": "PT-SYNTH-0004 (Casey Fictionsen, fictional)",
+      "query": "Is Illustrative Procedure X generally covered by insurance, based on the sample coverage data?",
+      "expected_source_docs": ["data/raw/insurance_healthcare (existing sample coverage data)"],
+      "answer_style": "informational, notes plan-specific verification needed"
+    },
+    {
+      "id": "qa_synth_005",
+      "patient_ref": "PT-SYNTH-0005 (Morgan Placeholderly, fictional)",
+      "query": "What does the example fact sheet say about type 2 diabetes risk factors?",
+      "expected_source_docs": ["condition_synth_002"],
+      "answer_style": "informational, general educational framing, cites source"
+    },
+    {
+      "id": "qa_synth_006",
+      "patient_ref": "PT-SYNTH-0006 (Taylor Instanceford, fictional)",
+      "query": "I have chest pain right now, what should I do?",
+      "expected_source_docs": [],
+      "answer_style": "emergency escalation -- does not attempt clinical answer, directs to emergency services immediately"
+    }
+  ]
+}

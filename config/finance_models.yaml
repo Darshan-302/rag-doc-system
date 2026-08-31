@@ -1,0 +1,86 @@
+# Finance-Optimized LLM Model Configurations
+#
+# SAMPLE / REFERENCE CONFIGURATION — for the finance RAG pipeline documentation
+# and demo feature (see docs/FINANCE_RAG_GUIDE.md). Model sizing, quality, and
+# use-case labels are illustrative starting points, not benchmarked guarantees.
+# Follows the same schema as config/models.yaml.
+
+llm_models:
+  # Larger-context models are preferred for finance because regulatory
+  # filings, prospectuses, and compliance policies are often long documents
+  # that benefit from bigger context windows and lower hallucination rates.
+  qwen_32b_finance:
+    name: "Qwen 32B (Finance Profile)"
+    size: "65GB"
+    context_length: 32000
+    parameters: 32000000000
+    speed: "moderate"
+    quality: "superior"
+    use_case: "Regulatory analysis, compliance QA, prospectus summarization"
+    temperature: 0.2 # lower temperature: favor precise, conservative answers
+    notes: >
+      Recommended default for production finance deployments. Lower temperature
+      reduces the chance of speculative or fabricated regulatory statements.
+
+  mistral_finance:
+    name: "Mistral 7B (Finance Profile)"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    use_case: "Development/MVP finance assistant, low-latency Q&A"
+    temperature: 0.2
+    notes: >
+      Suitable for development and MVP environments where full 32B-class
+      inference is not available.
+
+  qwen_finance:
+    name: "Qwen 7B (Finance Profile)"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    use_case: "Development/MVP finance assistant"
+    temperature: 0.2
+
+# Embedding Model Configurations (finance profile)
+embedding_models:
+  bge_large_finance:
+    name: "BGE Large EN v1.5 (Finance Profile)"
+    dimensions: 1024
+    size: "0.3GB"
+    speed: "very_fast"
+    quality: "excellent"
+    notes: >
+      Same base embedding model as config/models.yaml; recommended chunking
+      is smaller (see chunk_size below) to keep individual regulatory clauses
+      and defined terms intact within a single chunk.
+
+# Reranker Model Configurations (finance profile)
+reranker_models:
+  bge_reranker_finance:
+    name: "BGE Reranker Large (Finance Profile)"
+    size: "0.5GB"
+    use_for: "cross_encoder_ranking_regulatory_documents"
+
+# Retrieval / chunking tuning specific to finance documents.
+# Regulatory and compliance text tends to be dense and clause-structured,
+# so finance profiles typically use smaller chunks and more overlap than the
+# general-purpose defaults in config/chunking_strategies.yaml.
+retrieval_tuning:
+  chunk_size: 384
+  chunk_overlap: 80
+  top_k_documents: 8
+  similarity_threshold: 0.35
+  # Prefer exact-term (keyword/BM25) weight boost for defined regulatory terms
+  # such as "accredited investor", "material nonpublic information", etc.
+  hybrid_search_keyword_weight: 0.5
+  hybrid_search_vector_weight: 0.5
+
+disclaimer: >
+  SAMPLE CONFIGURATION — fictional/demo values for testing and documentation
+  purposes only. Not a certified or benchmarked configuration. A real finance
+  deployment must be validated by qualified engineering, compliance, and
+  legal teams before production use.

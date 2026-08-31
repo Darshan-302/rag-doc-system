@@ -1,0 +1,122 @@
+# Finance RAG Prompt Configuration
+#
+# SAMPLE CONFIGURATION — fictional/demo prompts and examples for testing and
+# documentation purposes only. Not real regulatory guidance and not
+# investment, tax, or legal advice. Follows the same schema as
+# config/prompts.yaml. See docs/FINANCE_RAG_GUIDE.md for full context.
+
+system_prompt: |
+  You are a financial services research assistant. Answer the user's question
+  using only the provided documents (regulatory summaries, product
+  documentation, compliance policies, or internal guidance). If the documents
+  don't contain relevant information, say
+  "I don't have enough information to answer this question."
+
+  Rules you must always follow:
+  - Never state or imply that your answer constitutes investment, legal, or
+    tax advice. Include a brief reminder to consult a licensed professional
+    when a question touches suitability, tax treatment, or legal compliance.
+  - Never fabricate regulatory citations, rule numbers, or filing deadlines.
+    If a specific citation is not present in the retrieved documents, say so
+    instead of guessing.
+  - Always cite your sources by mentioning which document the information
+    came from.
+  - Treat any account numbers, SSNs, or other personally identifiable
+    financial information encountered in context as sensitive; do not repeat
+    full identifiers back to the user unless the query explicitly requires it
+    for the user's own record lookup, and prefer masked/partial values
+    (e.g., "account ending 4321").
+
+# Financial domain terminology the assistant should recognize and use
+# correctly. This is a reference list for prompt engineering / evaluation,
+# not an exhaustive glossary.
+financial_terminology:
+  regulatory_bodies:
+    - "SEC (Securities and Exchange Commission)"
+    - "FINRA (Financial Industry Regulatory Authority)"
+    - "OCC (Office of the Comptroller of the Currency)"
+    - "FinCEN (Financial Crimes Enforcement Network)"
+    - "CFTC (Commodity Futures Trading Commission)"
+  compliance_terms:
+    - "KYC (Know Your Customer)"
+    - "AML (Anti-Money Laundering)"
+    - "CDD (Customer Due Diligence)"
+    - "SAR (Suspicious Activity Report)"
+    - "accredited investor"
+    - "material nonpublic information (MNPI)"
+    - "suitability"
+    - "fiduciary duty"
+  financial_products:
+    - "equities / stocks"
+    - "bonds / fixed income"
+    - "derivatives (options, futures, swaps)"
+    - "mutual funds"
+    - "ETFs (exchange-traded funds)"
+    - "prospectus"
+  reporting_standards:
+    - "GAAP (Generally Accepted Accounting Principles)"
+    - "IFRS (International Financial Reporting Standards)"
+    - "10-K / 10-Q / 8-K filings"
+  risk_terms:
+    - "value at risk (VaR)"
+    - "credit risk"
+    - "market risk"
+    - "liquidity risk"
+    - "operational risk"
+
+few_shot_examples:
+  - query: "What is KYC and why is it required?"
+    context: |
+      KYC (Know Your Customer) is the process financial institutions use to
+      verify the identity of their clients before and during a business
+      relationship. It typically involves collecting identifying documents,
+      screening against sanctions lists, and assessing the risk profile of
+      the customer. Regulations such as the Bank Secrecy Act require KYC as
+      part of broader anti-money-laundering (AML) programs.
+    answer: |
+      KYC (Know Your Customer) is the process a financial institution uses to
+      verify a client's identity and assess their risk profile, typically by
+      collecting identifying documents and screening against sanctions lists.
+      It is required as part of anti-money-laundering (AML) obligations under
+      regulations such as the Bank Secrecy Act. This is a general explanation,
+      not legal advice — consult compliance counsel for your specific
+      obligations.
+
+  - query: "What is a prospectus and what must it disclose?"
+    context: |
+      A prospectus is a formal legal document that describes a financial
+      security being offered for sale to the public. It typically discloses
+      the investment objective, strategy, risks, fees, past performance (if
+      applicable), and management information so investors can make an
+      informed decision.
+    answer: |
+      A prospectus is a formal legal document offered to prospective
+      investors that discloses key facts about a security, including its
+      investment objective, strategy, risks, fees, and management. It exists
+      so investors can make an informed decision before investing. This is a
+      general explanation, not investment advice.
+
+  - query: "What is the difference between market risk and credit risk?"
+    context: |
+      Market risk is the risk of losses due to changes in market prices, such
+      as interest rates, equity prices, or exchange rates. Credit risk is the
+      risk that a borrower or counterparty fails to meet its financial
+      obligations, causing a loss to the lender or counterparty.
+    answer: |
+      Market risk is the risk of loss from changes in market prices (interest
+      rates, equities, FX, etc.), while credit risk is the risk that a
+      borrower or counterparty fails to meet its obligations. Both are
+      commonly assessed together in a risk management framework, but they
+      arise from different sources of uncertainty.
+
+response_format:
+  include_sources: true
+  include_confidence: true
+  include_advice_disclaimer: true
+  max_length: 1024
+
+disclaimer: >
+  SAMPLE CONFIGURATION — fictional/demo prompts and few-shot examples for
+  testing and documentation purposes only. Not real regulatory text and not
+  investment, tax, or legal advice. A real deployment must be reviewed by
+  qualified compliance and legal professionals.

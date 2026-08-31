@@ -1,0 +1,46 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content. All company names, policy numbers, coverage terms, and figures below are synthetic and were generated for this repository. Do not use for actual underwriting, claims, or compliance decisions.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "policies": [
+    {
+      "id": "policy_ins_001",
+      "policy_number": "MMI-AUTO-0001234-SAMPLE",
+      "product_type": "auto",
+      "company": "Meridian Mutual Insurance (a fictional company used for this example)",
+      "name": "Meridian Mutual Personal Auto Policy — Standard Tier",
+      "state": "IL",
+      "content": "\n                        This is a fictional Personal Auto Policy issued by Meridian Mutual Insurance,\n                        a fictional company used for demonstration purposes only.\n\n                        Named Insured: Jordan A. Sample\n                        Policy Number: MMI-AUTO-0001234-SAMPLE\n                        Effective Period: 2026-01-01 to 2027-01-01\n\n                        Coverage Summary:\n                        - Bodily Injury Liability: $100,000 per person / $300,000 per accident\n                        - Property Damage Liability: $50,000 per accident\n                        - Collision Coverage: Actual cash value minus $500 deductible\n                        - Comprehensive Coverage: Actual cash value minus $250 deductible\n                        - Uninsured/Underinsured Motorist: $100,000 per person / $300,000 per accident\n\n                        Premium (fictional): $1,284.00 annually, billed in 6 installments of $214.00.\n\n                        This sample text is illustrative only and does not reflect any real\n                        Meridian Mutual Insurance product (the company itself is fictional).\n                        ",
+      "category": "Auto Insurance"
+    },
+    {
+      "id": "policy_ins_002",
+      "policy_number": "NHG-HOME-0009876-SAMPLE",
+      "product_type": "homeowners",
+      "company": "Northstar Harbor Group (a fictional company used for this example)",
+      "name": "Northstar Harbor Homeowners Policy — HO-3 Sample Template",
+      "state": "TX",
+      "content": "\n                        This is a fictional Homeowners Insurance policy template (HO-3 form style)\n                        issued by Northstar Harbor Group, a fictional company used for demonstration.\n\n                        Named Insured: Casey R. Example\n                        Policy Number: NHG-HOME-0009876-SAMPLE\n                        Effective Period: 2026-03-15 to 2027-03-15\n\n                        Coverage Summary:\n                        - Coverage A (Dwelling): $350,000\n                        - Coverage B (Other Structures): $35,000\n                        - Coverage C (Personal Property): $175,000\n                        - Coverage D (Loss of Use): $70,000\n                        - Coverage E (Personal Liability): $300,000\n                        - Coverage F (Medical Payments to Others): $5,000\n                        - Deductible: $1,500 (all perils), $3,500 (named windstorm/hail, state-specific)\n\n                        Premium (fictional): $2,110.00 annually.\n\n                        Exclusions (illustrative, not exhaustive): flood, earthquake, and\n                        intentional acts are excluded and would require separate fictional\n                        endorsements in this sample template.\n                        ",
+      "category": "Homeowners Insurance"
+    },
+    {
+      "id": "policy_ins_003",
+      "policy_number": "SLA-LIFE-0004567-SAMPLE",
+      "product_type": "life",
+      "company": "Summit Lighthouse Assurance (a fictional company used for this example)",
+      "name": "Summit Lighthouse 20-Year Level Term Life Policy",
+      "state": "CA",
+      "content": "\n                        This is a fictional 20-Year Level Term Life Insurance policy issued by\n                        Summit Lighthouse Assurance, a fictional company used for demonstration.\n\n                        Insured: Alex T. Demo\n                        Policy Number: SLA-LIFE-0004567-SAMPLE\n                        Face Amount: $500,000\n                        Term: 20 years, level premium\n                        Effective Date: 2026-06-01\n\n                        Premium (fictional): $42.50/month for a non-smoker, standard risk class.\n\n                        Riders (sample): Accelerated Death Benefit (illustrative), Waiver of\n                        Premium (illustrative). This document is a synthetic training/demo\n                        example and creates no real insurance contract.\n                        ",
+      "category": "Life Insurance"
+    },
+    {
+      "id": "policy_ins_004",
+      "policy_number": "EWC-HEALTH-0002468-SAMPLE",
+      "product_type": "health",
+      "company": "Evergreen Wellness Cooperative (a fictional company used for this example)",
+      "name": "Evergreen Wellness PPO Health Plan — Gold Tier Sample",
+      "state": "NY",
+      "content": "\n                        This is a fictional PPO health insurance plan summary issued by\n                        Evergreen Wellness Cooperative, a fictional company used for demonstration.\n                        This plan is a synthetic example and is not a real health insurance product.\n\n                        Member: Sam P. Illustrative\n                        Policy Number: EWC-HEALTH-0002468-SAMPLE\n                        Plan Tier: Gold PPO\n                        Effective Period: 2026-01-01 to 2026-12-31\n\n                        Coverage Summary:\n                        - Annual Deductible: $1,500 individual / $3,000 family\n                        - Out-of-Pocket Maximum: $6,000 individual / $12,000 family\n                        - Primary Care Visit: $25 copay\n                        - Specialist Visit: $50 copay\n                        - Preventive Care: Covered at 100%, no deductible\n                        - Prescription Drugs: Tiered copay ($10/$35/$70, fictional tiers)\n\n                        Note on protected health information (PHI): a real health insurance\n                        deployment handling member records must implement HIPAA safeguards.\n                        See docs/INSURANCE_RAG_GUIDE.md for a general, non-authoritative summary\n                        of relevant concepts — consult qualified compliance counsel for guidance\n                        on an actual deployment.\n                        ",
+      "category": "Health Insurance"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "synthetic": true,
+  "source_note": "Mirrors config/drug_database.yaml. All drug names and interaction severities are fabricated for demonstration and do not correspond to real medications or real interaction data.",
+  "interactions": [
+    {
+      "drug_a": "Synthovas-A",
+      "drug_b": "Glucomend-X",
+      "illustrative_severity": "moderate (example only)",
+      "illustrative_note": "Fabricated example note demonstrating a 'monitor patient' style flag. Not a real interaction finding."
+    },
+    {
+      "drug_a": "Cardiozan-Lite",
+      "drug_b": "Mindalex-SR",
+      "illustrative_severity": "low (example only)",
+      "illustrative_note": "Fabricated example note demonstrating a low-concern interaction flag. Not a real interaction finding."
+    },
+    {
+      "drug_a": "Mindalex-SR",
+      "drug_b": "Gastrolen",
+      "illustrative_severity": "unknown (example only)",
+      "illustrative_note": "Fabricated example note demonstrating an 'insufficient example data' case. Not a real interaction finding."
+    },
+    {
+      "drug_a": "Synthovas-A",
+      "drug_b": "Cardiozan-Lite",
+      "illustrative_severity": "low (example only)",
+      "illustrative_note": "Fabricated example note demonstrating co-use flagged only for routine monitoring. Not a real interaction finding."
+    }
+  ]
+}

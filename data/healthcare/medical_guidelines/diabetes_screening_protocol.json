@@ -1,0 +1,24 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "id": "guideline_synth_002",
+  "title": "Example Protocol Summary: General Approach to Type 2 Diabetes Screening (Synthetic)",
+  "category": "medical_guideline",
+  "synthetic": true,
+  "source_note": "Original wording written for demonstration purposes; general concept only, not a reproduction of any specific CDC/FDA/ADA publication. Not to be treated as current or authoritative guidance.",
+  "last_verified_example": "2026-01-01",
+  "summary": "This example protocol summary describes, at a general educational level, that screening for type 2 diabetes commonly considers risk factors such as age, weight, family history, and other cardiometabolic risk factors, and that clinicians may order standard laboratory tests to assess blood glucose regulation. Illustrative content only.",
+  "sections": [
+    {
+      "heading": "Risk factors (illustrative)",
+      "text": "Example educational content: commonly discussed risk factors include age, elevated body weight, family history, and history of elevated blood glucose. This list is illustrative and non-exhaustive."
+    },
+    {
+      "heading": "Screening approach (illustrative)",
+      "text": "Example educational content: clinicians may consider standard laboratory testing to assess blood glucose regulation as part of routine care, at a frequency and threshold determined by clinical judgment, not by this sample document."
+    },
+    {
+      "heading": "Follow-up (illustrative)",
+      "text": "Example educational content: follow-up steps after screening are determined by a clinician based on results and individual risk; this synthetic sample intentionally does not specify thresholds or follow-up intervals."
+    }
+  ]
+}
