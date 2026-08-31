@@ -1,0 +1,38 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "products": [
+    {
+      "id": "prod_ins_001",
+      "company": "Meridian Mutual Insurance (fictional)",
+      "product_name": "Meridian Mutual Personal Auto — Standard, Preferred, Non-Standard Tiers",
+      "product_type": "auto",
+      "states_available": ["IL", "IN", "WI"],
+      "summary": "Fictional personal auto product line with three fictional risk tiers, offering liability, collision, comprehensive, and uninsured/underinsured motorist coverage."
+    },
+    {
+      "id": "prod_ins_002",
+      "company": "Northstar Harbor Group (fictional)",
+      "product_name": "Northstar Harbor Homeowners HO-3 and HO-6 Sample Lines",
+      "product_type": "homeowners",
+      "states_available": ["TX", "LA", "FL"],
+      "summary": "Fictional homeowners (HO-3) and condo (HO-6) product templates with optional fictional wind/hail and water-backup endorsements."
+    },
+    {
+      "id": "prod_ins_003",
+      "company": "Summit Lighthouse Assurance (fictional)",
+      "product_name": "Summit Lighthouse Term Life — 10/20/30 Year Sample Terms",
+      "product_type": "life",
+      "states_available": ["CA", "OR", "WA"],
+      "summary": "Fictional level-term life insurance product line with sample riders for accelerated death benefit and waiver of premium."
+    },
+    {
+      "id": "prod_ins_004",
+      "company": "Evergreen Wellness Cooperative (fictional)",
+      "product_name": "Evergreen Wellness PPO — Bronze/Silver/Gold/Platinum Sample Tiers",
+      "product_type": "health",
+      "states_available": ["NY", "NJ", "CT"],
+      "summary": "Fictional individual health PPO product with four sample metal tiers, illustrative of ACA-style tiering concepts (not an actual marketplace filing)."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content. These premium rules are simplified, synthetic illustrations and are not actuarially sound or usable for real ratemaking.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "premium_rules": [
+    {
+      "id": "prem_ins_001",
+      "product_type": "auto",
+      "company": "Meridian Mutual Insurance (fictional)",
+      "title": "Auto Premium Calculation — Simplified Sample Formula",
+      "content": "\n                        Fictional, simplified illustration of how a base auto premium might\n                        be adjusted by rating factors. Not a real rating plan.\n\n                        base_premium = $800 (fictional base rate for this sample tier)\n\n                        final_premium = base_premium\n                            * risk_tier_factor   (A=0.85, B=1.00, C=1.35 -- fictional)\n                            * vehicle_age_factor  (0-3 yrs=1.10, 4-8 yrs=1.00, 9+ yrs=0.90 -- fictional)\n                            * territory_factor    (varies by fictional rating territory, 0.9-1.3)\n                            * discount_factor     (multi-policy 0.90, good-driver 0.85 -- fictional)\n\n                        Example (fictional): base $800 * tier B (1.00) * vehicle age 4-8 (1.00)\n                        * territory (1.05) * multi-policy discount (0.90) = $756.00/year.\n                        "
+    },
+    {
+      "id": "prem_ins_002",
+      "product_type": "health",
+      "company": "Evergreen Wellness Cooperative (fictional)",
+      "title": "Health Premium Calculation — Simplified Sample Formula",
+      "content": "\n                        Fictional, simplified illustration only. Real health premium rating\n                        is governed by applicable state and federal rules (e.g., limited\n                        rating factors, community rating requirements) that vary by\n                        jurisdiction -- consult qualified compliance counsel for any real\n                        deployment; this sample uses invented factors for demonstration.\n\n                        final_premium = plan_base_rate\n                            * age_band_factor      (fictional bands, e.g., 21-29=1.0, 50-64=2.6)\n                            * tobacco_factor        (fictional: 1.0 non-user, 1.5 user)\n                            * plan_tier_factor      (Bronze=0.85, Silver=1.00, Gold=1.15, Platinum=1.30 -- fictional)\n\n                        Example (fictional): plan base rate $350 * age band (1.4) * non-tobacco\n                        (1.0) * Gold tier (1.15) = $563.50/month.\n                        "
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content. These underwriting guidelines are synthetic illustrations, not the actual guidelines of any real insurer, and must not be used for real underwriting decisions.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "guidelines": [
+    {
+      "id": "uw_ins_001",
+      "product_type": "auto",
+      "company": "Meridian Mutual Insurance (fictional)",
+      "title": "Auto Underwriting — Driver Risk Tiers (Sample)",
+      "content": "\n                        Fictional underwriting guideline for illustration only.\n\n                        Risk Tier A (Preferred, fictional criteria):\n                        - 0 at-fault accidents in past 5 years\n                        - 0 moving violations in past 3 years\n                        - Continuous prior coverage of 3+ years\n\n                        Risk Tier B (Standard, fictional criteria):\n                        - 1 at-fault accident in past 5 years\n                        - Up to 2 moving violations in past 3 years\n\n                        Risk Tier C (Non-standard, fictional criteria):\n                        - 2+ at-fault accidents in past 5 years, or\n                        - A lapse in prior coverage exceeding 30 days\n\n                        Referral to fictional senior underwriter required for any risk\n                        involving a DUI/DWI conviction in the past 7 years (illustrative only).\n                        "
+    },
+    {
+      "id": "uw_ins_002",
+      "product_type": "homeowners",
+      "company": "Northstar Harbor Group (fictional)",
+      "title": "Homeowners Underwriting — Property Risk Factors (Sample)",
+      "content": "\n                        Fictional underwriting guideline for illustration only.\n\n                        Factors considered (fictional, illustrative weighting):\n                        - Roof age (roofs older than 20 years fictional-flagged for inspection)\n                        - Distance to fire hydrant / fire station\n                        - Prior claims history (2+ water-damage claims in 5 years fictional-flagged)\n                        - Presence of a swimming pool (may require fictional liability rider)\n                        - Construction type (frame vs. masonry, fictional rate factor)\n\n                        Coastal/high-wind fictional zones may require a separate wind/hail\n                        deductible endorsement, consistent with common state-specific practice\n                        (described here only in general terms, not as authoritative guidance).\n                        "
+    },
+    {
+      "id": "uw_ins_003",
+      "product_type": "life",
+      "company": "Summit Lighthouse Assurance (fictional)",
+      "title": "Life Underwriting — Risk Classification (Sample)",
+      "content": "\n                        Fictional underwriting guideline for illustration only.\n\n                        Risk classes (fictional, illustrative):\n                        - Preferred Plus: non-smoker, no chronic conditions, BMI within\n                          fictional target range, favorable fictional lab results.\n                        - Preferred: non-smoker, minor well-controlled fictional condition.\n                        - Standard: one or more moderate fictional risk factors.\n                        - Table Rated: elevated fictional risk factors requiring a premium\n                          multiplier (fictional tables, e.g. Table 2 = +25%).\n\n                        Applications with a face amount above a fictional threshold\n                        (e.g., $250,000 in this sample) are routed to fictional medical\n                        underwriting review, which may request a fictional paramedical exam.\n                        "
+    }
+  ]
+}
