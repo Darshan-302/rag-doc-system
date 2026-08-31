@@ -1,0 +1,47 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "synthetic": true,
+  "source_note": "Condition names are real (common medical terms), but all descriptive text below is written in original wording for demonstration and is intentionally general/non-clinical. It does not reproduce any specific CDC/FDA/NIH publication and should not be treated as current or complete medical information.",
+  "condition_fact_sheets": [
+    {
+      "id": "condition_synth_001",
+      "condition_name": "Hypertension (example fact sheet)",
+      "overview": "Example educational overview: a condition in which blood pressure against artery walls is elevated over time. Often has no noticeable symptoms, which is why routine monitoring is commonly discussed in educational materials.",
+      "example_general_topics_covered": [
+        "General overview of what blood pressure measurement represents",
+        "Commonly discussed lifestyle factors in patient education materials",
+        "General framing that a clinician determines individualized management"
+      ]
+    },
+    {
+      "id": "condition_synth_002",
+      "condition_name": "Type 2 Diabetes (example fact sheet)",
+      "overview": "Example educational overview: a condition involving the body's regulation of blood glucose. Patient education materials commonly discuss risk factors, general lifestyle topics, and the role of routine clinical follow-up.",
+      "example_general_topics_covered": [
+        "General overview of what blood glucose regulation involves",
+        "Commonly discussed lifestyle factors in patient education materials",
+        "General framing that screening/monitoring intervals are set by a clinician"
+      ]
+    },
+    {
+      "id": "condition_synth_003",
+      "condition_name": "Seasonal Allergic Rhinitis (example fact sheet)",
+      "overview": "Example educational overview: a common condition involving an immune response to airborne allergens, often discussed in general patient education as involving nasal and eye symptoms that vary seasonally.",
+      "example_general_topics_covered": [
+        "General overview of common symptom categories",
+        "General framing that triggers vary by individual and geography",
+        "General framing that a clinician can help identify management options"
+      ]
+    },
+    {
+      "id": "condition_synth_004",
+      "condition_name": "Generalized Anxiety (example fact sheet)",
+      "overview": "Example educational overview: a mental health condition commonly discussed in patient education as involving persistent worry that can affect daily functioning, with a range of general support and treatment options a clinician may discuss with a patient.",
+      "example_general_topics_covered": [
+        "General overview framing, not a diagnostic checklist",
+        "General framing that support options vary widely by individual",
+        "Reminder that a mental health professional should be consulted for evaluation"
+      ]
+    }
+  ]
+}

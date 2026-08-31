@@ -1,0 +1,103 @@
+# SYNTHETIC Drug Reference Configuration
+#
+# DISCLAIMER: SAMPLE DATA -- fictional, for testing/demo purposes only. Not
+# real medical guidance. Not reviewed by a medical professional. Do not use
+# for actual clinical, diagnostic, or treatment decisions.
+#
+# Every drug name, class, use, side effect, contraindication, and
+# interaction below is FABRICATED for the purpose of demonstrating the shape
+# of a drug-reference configuration file. Names are deliberately
+# non-real-drug-like (e.g. "Synthovas-A") so this data cannot be mistaken for
+# actual medication information. Do not add real dosage or clinical data to
+# this file without a full legal/clinical review — see
+# docs/HEALTHCARE_RAG_GUIDE.md.
+
+disclaimer: >
+  SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical
+  guidance. Not reviewed by a medical professional. Do not use for actual
+  clinical, diagnostic, or treatment decisions.
+
+drugs:
+  - id: "synth_drug_001"
+    name: "Synthovas-A"
+    synthetic: true
+    class: "Illustrative ACE-inhibitor-style agent (fictional)"
+    example_use: "Demonstration entry for blood-pressure-related patient education content"
+    example_side_effects:
+      - "illustrative: dizziness (example only)"
+      - "illustrative: dry cough (example only)"
+    example_contraindications:
+      - "illustrative: example pregnancy caution (fictional)"
+    notes: "Fictional entry; not a real medication"
+
+  - id: "synth_drug_002"
+    name: "Glucomend-X"
+    synthetic: true
+    class: "Illustrative glucose-regulation agent (fictional)"
+    example_use: "Demonstration entry for diabetes-related patient education content"
+    example_side_effects:
+      - "illustrative: gastrointestinal upset (example only)"
+    example_contraindications:
+      - "illustrative: example severe kidney impairment caution (fictional)"
+    notes: "Fictional entry; not a real medication"
+
+  - id: "synth_drug_003"
+    name: "Cardiozan-Lite"
+    synthetic: true
+    class: "Illustrative lipid-management agent (fictional)"
+    example_use: "Demonstration entry for cholesterol-related patient education content"
+    example_side_effects:
+      - "illustrative: muscle discomfort (example only)"
+    example_contraindications:
+      - "illustrative: example active liver condition caution (fictional)"
+    notes: "Fictional entry; not a real medication"
+
+  - id: "synth_drug_004"
+    name: "Mindalex-SR"
+    synthetic: true
+    class: "Illustrative mood-support agent (fictional)"
+    example_use: "Demonstration entry for mental-health-related patient education content"
+    example_side_effects:
+      - "illustrative: sleep changes (example only)"
+    example_contraindications:
+      - "illustrative: example interaction caution with other mood-support agents (fictional)"
+    notes: "Fictional entry; not a real medication"
+
+  - id: "synth_drug_005"
+    name: "Gastrolen"
+    synthetic: true
+    class: "Illustrative acid-reduction agent (fictional)"
+    example_use: "Demonstration entry for digestive-health-related patient education content"
+    example_side_effects:
+      - "illustrative: headache (example only)"
+    example_contraindications:
+      - "illustrative: example long-term-use caution (fictional)"
+    notes: "Fictional entry; not a real medication"
+
+# Illustrative interaction pairs. Severity levels are EXAMPLE LABELS only,
+# used to demonstrate how an interaction-checking feature might structure
+# data -- they are not derived from any real interaction database.
+interactions:
+  - drug_a: "Synthovas-A"
+    drug_b: "Glucomend-X"
+    illustrative_severity: "moderate (example only)"
+    illustrative_note: "Fabricated example note: illustrates how a 'monitor patient' style flag might be recorded. Not a real interaction finding."
+
+  - drug_a: "Cardiozan-Lite"
+    drug_b: "Mindalex-SR"
+    illustrative_severity: "low (example only)"
+    illustrative_note: "Fabricated example note: illustrates a low-concern interaction flag. Not a real interaction finding."
+
+  - drug_a: "Mindalex-SR"
+    drug_b: "Gastrolen"
+    illustrative_severity: "unknown (example only)"
+    illustrative_note: "Fabricated example note: illustrates how 'insufficient example data' might be represented. Not a real interaction finding."
+
+# Configuration for how a downstream drug-interaction-checking feature could
+# consume this file. No matching/lookup logic ships in this docs/config
+# feature; this section documents the intended shape only.
+interaction_check_settings:
+  lookup_field: "name"
+  case_insensitive: true
+  require_disclaimer_in_response: true
+  unknown_pair_response: "No interaction data available for this combination in the sample dataset; consult a pharmacist or prescriber."

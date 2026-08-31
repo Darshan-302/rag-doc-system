@@ -1,0 +1,24 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "id": "guideline_synth_001",
+  "title": "Example Guideline Summary: General Approach to Hypertension Management (Synthetic)",
+  "category": "medical_guideline",
+  "synthetic": true,
+  "source_note": "Original wording written for demonstration purposes; general concept only, not a reproduction of any specific CDC/FDA/AHA publication. Not to be treated as current or authoritative guidance.",
+  "last_verified_example": "2026-01-01",
+  "summary": "This example guideline summary describes, at a general educational level, that hypertension management commonly involves periodic blood pressure monitoring, lifestyle measures (such as reduced sodium intake, regular physical activity, and limiting alcohol), and, when a clinician determines it appropriate, medication therapy. Illustrative content only.",
+  "sections": [
+    {
+      "heading": "Monitoring (illustrative)",
+      "text": "Example educational content: routine blood pressure checks are commonly recommended as part of general health maintenance; frequency should be determined by a clinician based on individual risk factors."
+    },
+    {
+      "heading": "Lifestyle measures (illustrative)",
+      "text": "Example educational content: commonly discussed lifestyle measures include dietary sodium reduction, regular physical activity, weight management, and limiting alcohol intake. This is general educational framing, not an individualized plan."
+    },
+    {
+      "heading": "Medication therapy (illustrative)",
+      "text": "Example educational content: when lifestyle measures alone are not sufficient, a clinician may consider medication therapy. Specific medication choice and dosing are individualized clinical decisions and are intentionally NOT detailed in this synthetic sample."
+    }
+  ]
+}
