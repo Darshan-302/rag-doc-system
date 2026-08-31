@@ -175,12 +175,19 @@ rag-system/
 ├── config/
 │   ├── models.yaml         # Model configurations
 │   ├── prompts.yaml        # System prompts, few-shot examples
-│   └── chunking_strategies.yaml
+│   ├── chunking_strategies.yaml
+│   ├── healthcare_models.yaml   # Healthcare-oriented model config
+│   ├── healthcare_prompts.yaml  # Medical-terminology-aware prompts
+│   └── drug_database.yaml       # Synthetic/illustrative drug reference config
 ├── docs/
 │   ├── ARCHITECTURE.md     # Full architecture plan
 │   ├── API.md              # API documentation
 │   ├── DEPLOYMENT.md       # Deployment guides
-│   └── TUNING.md           # Model & retrieval tuning
+│   ├── TUNING.md           # Model & retrieval tuning
+│   ├── HEALTHCARE_RAG_GUIDE.md    # HIPAA/PHI design notes for healthcare RAG
+│   └── HEALTHCARE_EXAMPLES.md     # Healthcare example queries (synthetic data)
+├── data/
+│   └── healthcare/         # Synthetic healthcare sample data (see data/healthcare/README.md)
 ├── pyproject.toml          # Poetry dependencies
 └── docker-compose.yml      # Development stack
 ```
@@ -232,7 +239,7 @@ Complete isolation:
 
 - **Multi-Tenancy**: Complete data isolation per tenant
 - **GDPR**: Right to erasure, data portability, audit trails
-- **HIPAA**: PHI detection, encryption, access logging (for healthcare)
+- **HIPAA**: PHI detection, encryption, access logging (for healthcare) — see [HEALTHCARE_RAG_GUIDE.md](docs/HEALTHCARE_RAG_GUIDE.md) for detailed design notes and disclaimers
 - **SOC2**: Automated backups, encryption, vulnerability scanning
 - **Data Residency**: EU/US/APAC region options
 
@@ -409,6 +416,8 @@ docker-compose up -d    # Restart
 - [API.md](docs/API.md) - API reference
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Cloud deployment guides
 - [TUNING.md](docs/TUNING.md) - Performance optimization
+- [HEALTHCARE_RAG_GUIDE.md](docs/HEALTHCARE_RAG_GUIDE.md) - Healthcare-domain RAG pipeline: HIPAA/PHI handling concepts, security & compliance design notes (see disclaimer in the guide)
+- [HEALTHCARE_EXAMPLES.md](docs/HEALTHCARE_EXAMPLES.md) - Example healthcare queries and flows (synthetic sample data only)
 
 ## 📄 License
 
