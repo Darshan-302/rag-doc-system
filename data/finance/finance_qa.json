@@ -1,0 +1,45 @@
+{
+  "disclaimer": "SAMPLE DATA - fictional, for testing/demo purposes only. Not real regulatory text, not investment advice, not reviewed by a compliance or legal professional. Answers are general educational explanations only, referencing fictional companies where an example is used.",
+  "qa_pairs": [
+    {
+      "id": "finance_qa_001",
+      "question": "What is KYC and why do financial firms perform it?",
+      "answer": "KYC (Know Your Customer) is the process a financial firm uses to verify a client's identity and understand their financial background and risk profile before and during a business relationship. Firms perform it to comply with anti-money-laundering (AML) obligations and to reduce fraud and financial-crime risk. This is a general explanation, not legal advice."
+    },
+    {
+      "id": "finance_qa_002",
+      "question": "What is a prospectus and why is it provided to investors?",
+      "answer": "A prospectus is a formal document describing a security being offered for sale, including its investment objective, strategy, risks, and fees. It is provided so investors have the information needed to make an informed decision before investing. This is a general explanation, not investment advice."
+    },
+    {
+      "id": "finance_qa_003",
+      "question": "What is the difference between GAAP and IFRS?",
+      "answer": "GAAP (Generally Accepted Accounting Principles) is the accounting framework commonly used in the United States, while IFRS (International Financial Reporting Standards) is used in many other countries. Both aim to standardize financial reporting, but they differ in specific rules, such as how certain items like inventory or leases are treated. This is a general explanation, not accounting advice."
+    },
+    {
+      "id": "finance_qa_004",
+      "question": "What does 'material nonpublic information' mean, and why does it matter for trading?",
+      "answer": "Material nonpublic information (MNPI) is information about a company that has not been made public and that a reasonable investor would consider important to an investment decision. Trading securities while possessing MNPI, or passing it to others who trade on it, is generally prohibited because it undermines fair and equal access to market information. This is a general explanation, not legal advice."
+    },
+    {
+      "id": "finance_qa_005",
+      "question": "What is a suitability assessment in the context of investment recommendations?",
+      "answer": "A suitability assessment evaluates whether a recommended investment or strategy is appropriate for a specific customer, based on factors like their financial situation, investment experience, time horizon, and risk tolerance. It exists to help ensure recommendations align with the customer's actual needs and capacity for risk. This is a general explanation, not investment advice."
+    },
+    {
+      "id": "finance_qa_006",
+      "question": "What is a Suspicious Activity Report (SAR)?",
+      "answer": "A Suspicious Activity Report (SAR) is a report a financial institution files with regulators when it identifies a transaction or pattern of transactions that appears potentially related to money laundering, fraud, or other financial crime, regardless of whether wrongdoing is confirmed. This is a general explanation, not legal advice."
+    },
+    {
+      "id": "finance_qa_007",
+      "question": "What is value at risk (VaR) used for?",
+      "answer": "Value at risk (VaR) is a risk-management statistic that estimates the potential loss in value of a portfolio over a defined time period, at a given confidence level, under normal market conditions. It's commonly used to help firms understand and communicate downside risk exposure. This is a general explanation, not investment advice."
+    },
+    {
+      "id": "finance_qa_008",
+      "question": "What are common types of financial risk that a risk management framework addresses?",
+      "answer": "Common categories include market risk (losses from price movements), credit risk (counterparty default), liquidity risk (inability to convert assets to cash without significant loss), and operational risk (losses from failed internal processes, systems, or external events). This is a general explanation, not investment advice."
+    }
+  ]
+}
