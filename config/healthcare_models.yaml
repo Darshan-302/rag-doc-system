@@ -1,0 +1,93 @@
+# Healthcare-Optimized Model Configurations
+#
+# DISCLAIMER: These configuration values are illustrative starting points for
+# a healthcare-domain RAG deployment. Model choice, context length, and
+# quantization should be validated against your own hardware, latency, and
+# accuracy requirements. This file does not constitute medical or compliance
+# guidance — see docs/HEALTHCARE_RAG_GUIDE.md.
+#
+# Format mirrors config/models.yaml.
+
+# LLM Model Configurations (healthcare-oriented selection notes)
+llm_models:
+  mistral:
+    name: "Mistral 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    healthcare_notes: "Suitable for development/MVP; validate medical terminology handling before clinical-adjacent use"
+
+  qwen:
+    name: "Qwen 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    healthcare_notes: "Suitable for development/MVP; validate medical terminology handling before clinical-adjacent use"
+
+  qwen_32b:
+    name: "Qwen 32B"
+    size: "65GB"
+    context_length: 32000
+    parameters: 32000000000
+    speed: "moderate"
+    quality: "superior"
+    healthcare_notes: "Recommended for production healthcare deployments needing higher factual reliability; still requires source citation and human review workflow"
+
+  llama2:
+    name: "Llama 2 7B"
+    size: "15GB"
+    context_length: 4096
+    parameters: 7000000000
+    speed: "fast"
+    quality: "good"
+    healthcare_notes: "Shorter context window; less suited to long clinical documents without aggressive chunking"
+
+# Embedding Model Configurations
+embedding_models:
+  bge_large:
+    name: "BGE Large EN v1.5"
+    dimensions: 1024
+    size: "0.3GB"
+    speed: "very_fast"
+    quality: "excellent"
+    healthcare_notes: "General-purpose embedding model; for production clinical retrieval, evaluate a biomedical-domain embedding model (e.g. a PubMedBERT-family model) against your query set"
+
+  nomic_embed:
+    name: "Nomic Embed Text"
+    dimensions: 768
+    size: "0.2GB"
+    speed: "very_fast"
+    quality: "very_good"
+    healthcare_notes: "General-purpose embedding model; benchmark against domain-specific alternatives for clinical terminology recall"
+
+# Reranker Model Configurations
+reranker_models:
+  bge_reranker:
+    name: "BGE Reranker Large"
+    size: "0.5GB"
+    use_for: "cross_encoder_ranking"
+    healthcare_notes: "Useful to push source documents with matching clinical terminology (e.g. exact drug name, ICD-10-style condition terms) above loosely related results"
+
+# Healthcare-specific retrieval/generation tuning defaults.
+# These are configuration values only (consumed by an implementer's own
+# pipeline code); no enforcement logic ships in this docs/config feature.
+healthcare_defaults:
+  # Prefer lower temperature for more deterministic, conservative answers
+  # when summarizing clinical/medical content.
+  llm_temperature: 0.2
+  # Require retrieved sources to be surfaced with every answer.
+  require_source_citation: true
+  # Require a standard non-diagnostic disclaimer on every generated answer
+  # that touches medical_guidelines, drug_interactions, or conditions data.
+  require_medical_disclaimer: true
+  # Route queries that look like emergencies (see healthcare_prompts.yaml
+  # escalation_keywords) away from generation and toward a static
+  # "seek emergency care" response.
+  enable_emergency_escalation_check: true
+  # Prefer smaller top_k with higher reranking weight, since clinical
+  # answers benefit more from precision than recall breadth.
+  top_k_documents: 4
