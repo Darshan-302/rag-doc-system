@@ -8,6 +8,13 @@ from typing import Optional
 from dataclasses import dataclass
 
 from src.config import settings
+from src.models.registry import (
+    ModelConfigLoader,
+    ModelMetadata,
+    ModelRegistry,
+    NoSuitableModelError,
+)
+from src.models.resources import get_available_ram_gb
 
 logger = logging.getLogger(__name__)
 
@@ -33,13 +40,67 @@ class RAGResponse:
 class RAGPipeline:
     """Main RAG orchestration class."""
 
-    def __init__(self):
-        """Initialize RAG pipeline components."""
+    def __init__(
+        self,
+        model: Optional[str] = None,
+        registry: Optional[ModelRegistry] = None,
+        available_ram_gb: Optional[float] = None,
+    ):
+        """Initialize RAG pipeline components.
+
+        Args:
+            model: Model identifier (config/models.yaml key or ollama tag) to
+                use. Defaults to settings.LLM_MODEL (issue #1: "RAGPipeline
+                accepts a model parameter", "model changeable via env var").
+            registry: Optional pre-built ModelRegistry (mainly for tests).
+                Defaults to a registry loaded from config/models.yaml.
+            available_ram_gb: RAM/VRAM figure (GB) to validate the model
+                against. Defaults to settings.RAM_AVAILABLE_GB, falling back
+                to an auto-detected value (issue #5).
+        """
         self.ollama_url = settings.OLLAMA_BASE_URL
-        self.llm_model = settings.LLM_MODEL
         self.embedding_model = settings.EMBEDDING_MODEL
         self.client = httpx.AsyncClient()
-        logger.info(f"RAG Pipeline initialized with {self.llm_model}")
+
+        requested_model = model or settings.LLM_MODEL
+        self.model_metadata: Optional[ModelMetadata] = None
+        self.quantization = settings.QUANTIZATION_METHOD
+
+        try:
+            self.registry = registry or ModelRegistry(ModelConfigLoader())
+        except FileNotFoundError as e:
+            logger.warning(f"Could not load model registry ({e}); using '{requested_model}' as-is with no fallback/RAM checking.")
+            self.registry = None
+
+        if self.registry is not None:
+            ram_gb = available_ram_gb if available_ram_gb is not None else settings.RAM_AVAILABLE_GB
+            if ram_gb is None:
+                ram_gb = get_available_ram_gb()
+                if ram_gb:
+                    logger.info(f"Auto-detected available RAM: {ram_gb:.1f}GB")
+                else:
+                    logger.info("Could not auto-detect available RAM; skipping RAM-fit validation for model selection.")
+                    ram_gb = None
+
+            fallback_chain = settings.model_fallback_list
+            try:
+                self.model_metadata = self.registry.resolve(
+                    requested_model,
+                    available_ram_gb=ram_gb,
+                    quantization=self.quantization,
+                    fallback_chain=fallback_chain,
+                )
+                self.llm_model = self.model_metadata.ollama_tag
+            except NoSuitableModelError as e:
+                logger.error(
+                    f"{e} Falling back to requested model '{requested_model}' unchecked; "
+                    f"expect possible out-of-memory errors from Ollama."
+                )
+                self.llm_model = requested_model
+        else:
+            self.llm_model = requested_model
+
+        logger.info(f"RAG Pipeline initialized with {self.llm_model}" + (f" [{self.quantization}]" if self.model_metadata else ""))
 
     async def query(
         self,

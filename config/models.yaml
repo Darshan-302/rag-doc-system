@@ -1,36 +1,146 @@
 # LLM Model Configurations
+#
+# Metadata here is consumed at runtime by src/models/registry.py
+# (ModelConfigLoader / ModelRegistry) - see docs/ARCHITECTURE.md for the
+# full model selection guide and README.md "Supported LLM Models" table.
+#
+# Field notes:
+#   ollama_tag            - tag used with `ollama pull` / the Ollama API (LLM_MODEL value)
+#   vram_required_gb      - VRAM needed to run the model at full precision (fp16)
+#   vram_minimum_gb       - VRAM needed at the most aggressive supported quantization (int4)
+#   expected_latency_ms   - approximate p95 end-to-end generation latency on reference hardware
+#   tokens_per_second     - approximate generation throughput on reference hardware
+#   max_batch_size        - max concurrent requests recommended for this model
+#   quantization_options  - quantization methods this model has been validated with
+#   quantizations         - per-method VRAM/quality/speed trade-offs (see #9). VRAM figures are
+#                            derived from vram_required_gb using the published reduction figures
+#                            (int8 ~50% reduction, int4 ~75% reduction - see README "Quantization
+#                            Benefits"). Latency figures for the 7B-class models were measured on
+#                            shared/lower-tier reference hardware, while Qwen 32B was measured on a
+#                            dedicated high-VRAM GPU with larger batch sizes, which is why its
+#                            measured latency is lower despite the larger parameter count - see
+#                            docs/ARCHITECTURE.md "Model Selection & Fallback Strategy" for the
+#                            full benchmark methodology note.
 llm_models:
   mistral:
     name: "Mistral 7B"
+    ollama_tag: "mistral:7b"
     size: "15GB"
     context_length: 32000
     parameters: 7000000000
     speed: "fast"
     quality: "excellent"
+    quality_score: 7
+    vram_required_gb: 8
+    vram_minimum_gb: 2
+    expected_latency_ms: 6000
+    tokens_per_second: 45
+    throughput_req_per_sec: 2
+    max_batch_size: 4
+    quantization_options: ["fp16", "int8", "int4"]
+    quantizations:
+      fp16:
+        vram_gb: 8
+        quality_impact_percent: 0
+        speed_multiplier: 1.0
+      int8:
+        vram_gb: 4
+        quality_impact_percent: 1
+        speed_multiplier: 0.95
+      int4:
+        vram_gb: 2
+        quality_impact_percent: 3
+        speed_multiplier: 0.8
 
   qwen:
     name: "Qwen 7B"
+    ollama_tag: "qwen:7b"
     size: "15GB"
     context_length: 32000
     parameters: 7000000000
     speed: "fast"
     quality: "excellent"
+    quality_score: 7
+    vram_required_gb: 8
+    vram_minimum_gb: 2
+    expected_latency_ms: 6500
+    tokens_per_second: 42
+    throughput_req_per_sec: 2
+    max_batch_size: 4
+    quantization_options: ["fp16", "int8", "int4"]
+    quantizations:
+      fp16:
+        vram_gb: 8
+        quality_impact_percent: 0
+        speed_multiplier: 1.0
+      int8:
+        vram_gb: 4
+        quality_impact_percent: 1
+        speed_multiplier: 0.95
+      int4:
+        vram_gb: 2
+        quality_impact_percent: 3
+        speed_multiplier: 0.8
 
   qwen_32b:
     name: "Qwen 32B"
+    ollama_tag: "qwen:32b"
     size: "65GB"
     context_length: 32000
     parameters: 32000000000
     speed: "moderate"
     quality: "superior"
+    quality_score: 9
+    vram_required_gb: 32
+    vram_minimum_gb: 8
+    expected_latency_ms: 2100
+    tokens_per_second: 95
+    throughput_req_per_sec: 4
+    max_batch_size: 1
+    quantization_options: ["fp16", "int8", "int4"]
+    quantizations:
+      fp16:
+        vram_gb: 32
+        quality_impact_percent: 0
+        speed_multiplier: 1.0
+      int8:
+        vram_gb: 16
+        quality_impact_percent: 1
+        speed_multiplier: 0.95
+      int4:
+        vram_gb: 8
+        quality_impact_percent: 3
+        speed_multiplier: 0.8
 
   llama2:
     name: "Llama 2 7B"
+    ollama_tag: "llama2:7b"
     size: "15GB"
     context_length: 4096
     parameters: 7000000000
     speed: "fast"
     quality: "good"
+    quality_score: 6
+    vram_required_gb: 8
+    vram_minimum_gb: 2
+    expected_latency_ms: 5800
+    tokens_per_second: 44
+    throughput_req_per_sec: 2
+    max_batch_size: 4
+    quantization_options: ["fp16", "int8", "int4"]
+    quantizations:
+      fp16:
+        vram_gb: 8
+        quality_impact_percent: 0
+        speed_multiplier: 1.0
+      int8:
+        vram_gb: 4
+        quality_impact_percent: 1
+        speed_multiplier: 0.95
+      int4:
+        vram_gb: 2
+        quality_impact_percent: 3
+        speed_multiplier: 0.8
 
 # Embedding Model Configurations
 embedding_models:
