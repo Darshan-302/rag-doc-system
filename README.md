@@ -409,6 +409,8 @@ docker-compose up -d    # Restart
 - [API.md](docs/API.md) - API reference
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Cloud deployment guides
 - [TUNING.md](docs/TUNING.md) - Performance optimization
+- [FINANCE_RAG_GUIDE.md](docs/FINANCE_RAG_GUIDE.md) - Finance industry RAG pipeline: regulatory compliance, data sources, and compliance design notes
+- [FINANCE_EXAMPLES.md](docs/FINANCE_EXAMPLES.md) - Worked finance query examples (regulatory, compliance, risk, trading rules)
 
 ## 📄 License
 
