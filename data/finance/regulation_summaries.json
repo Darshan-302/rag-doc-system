@@ -1,0 +1,45 @@
+{
+  "disclaimer": "SAMPLE DATA - fictional, for testing/demo purposes only. Not real regulatory text, not investment advice, not reviewed by a compliance or legal professional. These are original plain-English summaries written for this project, not reproductions of actual SEC/FINRA/OCC text. Consult qualified legal/compliance counsel and official regulator publications for real guidance.",
+  "regulation_summaries": [
+    {
+      "id": "reg_summary_001",
+      "title": "SEC-Style Summary: Public Company Periodic Disclosure (Fictional Example)",
+      "regulatory_body": "SEC",
+      "category": "Disclosure & Reporting",
+      "content": "\n                        This is a fictional, simplified summary created for demo purposes, not real SEC rule text.\n\n                        General concept: Public companies are generally expected to file periodic\n                        reports (such as annual and quarterly reports) that disclose their financial\n                        condition, results of operations, and material events that could affect an\n                        investor's decision to buy, hold, or sell the company's securities.\n\n                        Illustrative example: 'Meridian Capital Partners' (a fictional company used\n                        for this example) would be expected to file an annual report summarizing its\n                        fiscal year results and a quarterly report each quarter, plus a current report\n                        promptly after any material event such as a leadership change or major\n                        acquisition.\n                        ",
+      "tags": ["disclosure", "periodic-reporting", "10-K", "10-Q"]
+    },
+    {
+      "id": "reg_summary_002",
+      "title": "FINRA-Style Summary: Suitability Obligation (Fictional Example)",
+      "regulatory_body": "FINRA",
+      "category": "Sales Practice",
+      "content": "\n                        This is a fictional, simplified summary created for demo purposes, not real\n                        FINRA rule text.\n\n                        General concept: A broker-dealer's recommendation to a customer is generally\n                        expected to be suitable given the customer's investment profile, including\n                        factors such as age, financial situation, investment experience, time horizon,\n                        liquidity needs, and risk tolerance.\n\n                        Illustrative example: A representative at 'Northbridge Advisory Group' (a\n                        fictional firm used for this example) recommending a complex derivatives\n                        strategy to a customer would generally be expected to first assess whether\n                        that customer's investment profile supports that level of risk.\n                        ",
+      "tags": ["suitability", "sales-practice", "broker-dealer"]
+    },
+    {
+      "id": "reg_summary_003",
+      "title": "SEC-Style Summary: Insider Trading / Material Nonpublic Information (Fictional Example)",
+      "regulatory_body": "SEC",
+      "category": "Market Integrity",
+      "content": "\n                        This is a fictional, simplified summary created for demo purposes, not real\n                        SEC rule text.\n\n                        General concept: Trading a company's securities while in possession of\n                        material information that has not been made public, or passing that\n                        information to others who trade on it, is generally prohibited.\n\n                        Illustrative example: An employee of fictional company 'Solara Biotech Inc.'\n                        (a fictional company used for this example) who learns of an unannounced\n                        clinical trial result would generally be expected to refrain from trading\n                        Solara shares, or tipping others, until the information is publicly disclosed.\n                        ",
+      "tags": ["insider-trading", "mnpi", "market-integrity"]
+    },
+    {
+      "id": "reg_summary_004",
+      "title": "OCC-Style Summary: Bank Capital Adequacy (Fictional Example)",
+      "regulatory_body": "OCC",
+      "category": "Safety & Soundness",
+      "content": "\n                        This is a fictional, simplified summary created for demo purposes, not real\n                        OCC rule text.\n\n                        General concept: National banks are generally expected to maintain capital\n                        reserves proportionate to their risk-weighted assets, to remain resilient\n                        under financial stress.\n\n                        Illustrative example: Fictional 'Cascade National Bank' (a fictional bank\n                        used for this example) would be expected to periodically report its capital\n                        ratios to its regulator and maintain them above the applicable regulatory\n                        minimums.\n                        ",
+      "tags": ["capital-adequacy", "bank-supervision"]
+    },
+    {
+      "id": "reg_summary_005",
+      "title": "FinCEN-Style Summary: Suspicious Activity Reporting (Fictional Example)",
+      "regulatory_body": "FinCEN",
+      "category": "AML",
+      "content": "\n                        This is a fictional, simplified summary created for demo purposes, not real\n                        FinCEN rule text.\n\n                        General concept: Financial institutions are generally expected to monitor\n                        customer transactions and file a suspicious activity report (SAR) when a\n                        transaction pattern appears potentially related to money laundering or other\n                        financial crime, regardless of whether wrongdoing is confirmed.\n\n                        Illustrative example: If a fictional customer at 'Northbridge Advisory Group'\n                        (a fictional firm used for this example) made a series of transfers just\n                        below a reporting threshold, that pattern might be flagged for internal\n                        review under an AML monitoring program.\n                        ",
+      "tags": ["aml", "sar", "transaction-monitoring"]
+    }
+  ]
+}

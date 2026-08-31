@@ -1,0 +1,118 @@
+# Regulatory Reference Configuration for the Finance RAG Pipeline
+#
+# SAMPLE / REFERENCE CONFIGURATION — for documentation and demo purposes only.
+# Descriptions below are general, non-authoritative summaries written in our
+# own words for context/reference. They do NOT reproduce actual regulatory
+# text and must NOT be treated as legal or compliance guidance. Always consult
+# the primary regulator's official publications and qualified legal/compliance
+# counsel before relying on any regulatory interpretation.
+#
+# This file is consumed by the finance RAG pipeline to tag ingested documents
+# with a regulatory category and to help the retrieval layer route queries
+# (e.g., "is this a KYC question or a trading-rules question?").
+
+regulatory_bodies:
+  sec:
+    name: "U.S. Securities and Exchange Commission"
+    abbreviation: "SEC"
+    jurisdiction: "United States"
+    focus_areas:
+      - "securities registration and disclosure"
+      - "investor protection"
+      - "market integrity and insider trading enforcement"
+    reference_url: "https://www.sec.gov/"
+
+  finra:
+    name: "Financial Industry Regulatory Authority"
+    abbreviation: "FINRA"
+    jurisdiction: "United States"
+    focus_areas:
+      - "broker-dealer conduct rules"
+      - "trading practices and market surveillance"
+      - "suitability and sales practice standards"
+    reference_url: "https://www.finra.org/"
+
+  occ:
+    name: "Office of the Comptroller of the Currency"
+    abbreviation: "OCC"
+    jurisdiction: "United States"
+    focus_areas:
+      - "national bank and federal savings association supervision"
+      - "safety and soundness examinations"
+      - "capital adequacy oversight"
+    reference_url: "https://www.occ.gov/"
+
+  fincen:
+    name: "Financial Crimes Enforcement Network"
+    abbreviation: "FinCEN"
+    jurisdiction: "United States"
+    focus_areas:
+      - "anti-money laundering (AML) enforcement"
+      - "suspicious activity reporting"
+      - "Bank Secrecy Act administration"
+    reference_url: "https://www.fincen.gov/"
+
+# Non-exhaustive, general-purpose summaries of frequently referenced
+# regulatory/compliance topics. These are plain-English explanations written
+# for this project, not excerpts of any official text.
+regulatory_topics:
+  kyc_aml:
+    label: "KYC / AML"
+    summary: >
+      General framework requiring financial institutions to verify customer
+      identity, assess risk, and monitor for suspicious activity to deter
+      money laundering and terrorist financing.
+      Related bodies: fincen, occ.
+
+  suitability:
+    label: "Investment Suitability"
+    summary: >
+      General principle that a recommendation to a customer should be
+      consistent with the customer's financial situation, objectives, and
+      risk tolerance. Related bodies: finra, sec.
+
+  material_nonpublic_information:
+    label: "Material Nonpublic Information (MNPI) / Insider Trading"
+    summary: >
+      General prohibition on trading securities while in possession of
+      material information that has not been made public, and on tipping
+      others who then trade on it. Related bodies: sec, finra.
+
+  disclosure_reporting:
+    label: "Disclosure & Periodic Reporting"
+    summary: >
+      General requirement for public companies to periodically disclose
+      financial condition and material events (e.g., annual and quarterly
+      reports) so investors can make informed decisions. Related bodies: sec.
+
+  capital_adequacy:
+    label: "Capital Adequacy"
+    summary: >
+      General requirement that regulated banks maintain sufficient capital
+      reserves relative to their risk-weighted assets to remain solvent under
+      stress. Related bodies: occ.
+
+  data_privacy_glba:
+    label: "GLBA Privacy (Gramm-Leach-Bliley Act, general concept)"
+    summary: >
+      General framework requiring financial institutions to explain their
+      information-sharing practices to customers and to safeguard sensitive
+      customer financial data.
+
+# Financial reporting standards referenced by finance RAG queries.
+reporting_standards:
+  gaap:
+    name: "Generally Accepted Accounting Principles"
+    abbreviation: "GAAP"
+    jurisdiction: "United States"
+  ifrs:
+    name: "International Financial Reporting Standards"
+    abbreviation: "IFRS"
+    jurisdiction: "International"
+
+disclaimer: >
+  SAMPLE / REFERENCE DATA — fictional summaries for testing and documentation
+  purposes only, written in our own words. Not real regulatory text, not
+  legal or compliance advice, and not reviewed by a compliance or legal
+  professional. A real deployment must consult qualified legal/compliance
+  counsel and the regulator's official publications.

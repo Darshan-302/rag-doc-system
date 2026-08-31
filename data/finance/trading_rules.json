@@ -1,0 +1,33 @@
+{
+  "disclaimer": "SAMPLE DATA - fictional, for testing/demo purposes only. Not real regulatory text, not investment advice, not reviewed by a compliance or legal professional. These are original, simplified descriptions of general trading-rule concepts written for this project, not reproductions of any actual exchange or FINRA rulebook text.",
+  "trading_rules": [
+    {
+      "id": "trading_rule_001",
+      "title": "Pattern Day Trading Threshold (General Concept, Fictional Illustration)",
+      "category": "Trading Rules",
+      "content": "\n                        General concept: Accounts that execute a certain number of 'day trades'\n                        (buying and selling the same security within one trading day) within a\n                        rolling five-business-day window are commonly classified under pattern\n                        day trading rules and may be subject to minimum equity requirements.\n\n                        Illustrative example: A fictional customer account at 'Northbridge Advisory\n                        Group' (a fictional firm used for this example) that executes four or more\n                        day trades in five business days, where those trades are more than 6% of\n                        total trades in that window, might be flagged as a pattern day trader under\n                        the firm's internal policy and required to maintain a minimum account equity\n                        threshold.\n                        ",
+      "tags": ["day-trading", "margin", "account-equity"]
+    },
+    {
+      "id": "trading_rule_002",
+      "title": "Trade Settlement Cycle (General Concept, Fictional Illustration)",
+      "category": "Trading Rules",
+      "content": "\n                        General concept: Most equity and bond trades settle a standard number of\n                        business days after the trade date (commonly abbreviated T+1 or T+2 in\n                        general market practice), meaning the exchange of cash and securities is\n                        finalized on that later date.\n\n                        Illustrative example: If a fictional customer buys shares of 'Solara Biotech\n                        Inc.' (fictional company) on a Monday under a T+1 settlement convention, the\n                        trade would generally be expected to settle on Tuesday.\n                        ",
+      "tags": ["settlement", "trade-lifecycle"]
+    },
+    {
+      "id": "trading_rule_003",
+      "title": "Restricted / Watch List Trading Controls (General Concept, Fictional Illustration)",
+      "category": "Trading Rules",
+      "content": "\n                        General concept: Firms commonly maintain a restricted list or watch list of\n                        securities for which employee or firm trading is limited or monitored, often\n                        because the firm possesses or may possess material nonpublic information\n                        about the issuer.\n                        \n                        Illustrative example: If fictional 'Meridian Capital Partners' (a fictional\n                        firm used for this example) is advising on a fictional pending acquisition\n                        involving 'Solara Biotech Inc.', Solara shares might be placed on an internal\n                        restricted list, limiting employee trading in that name until the matter is\n                        public.\n                        ",
+      "tags": ["restricted-list", "mnpi", "trade-surveillance"]
+    },
+    {
+      "id": "trading_rule_004",
+      "title": "Order Best-Execution Expectation (General Concept, Fictional Illustration)",
+      "category": "Trading Rules",
+      "content": "\n                        General concept: When executing customer orders, firms are generally expected\n                        to seek the most favorable terms reasonably available for the customer under\n                        prevailing market conditions, commonly referred to as 'best execution.'\n\n                        Illustrative example: A fictional order-routing system at 'Cascade National\n                        Bank' (a fictional bank used for this example) might compare execution\n                        venues for price, speed, and likelihood of execution before routing a\n                        customer's order.\n                        ",
+      "tags": ["best-execution", "order-routing"]
+    }
+  ]
+}

@@ -416,6 +416,8 @@ docker-compose up -d    # Restart
 - [TUNING.md](docs/TUNING.md) - Performance optimization
 - [INSURANCE_RAG_GUIDE.md](docs/INSURANCE_RAG_GUIDE.md) - Insurance industry RAG pipeline: setup, domain-specific features, and compliance (HIPAA, state regulations)
 - [INSURANCE_EXAMPLES.md](docs/INSURANCE_EXAMPLES.md) - Example insurance policies, claims workflows, and queries (fictional sample data)
+- [FINANCE_RAG_GUIDE.md](docs/FINANCE_RAG_GUIDE.md) - Finance industry RAG pipeline: regulatory compliance, data sources, and compliance design notes
+- [FINANCE_EXAMPLES.md](docs/FINANCE_EXAMPLES.md) - Worked finance query examples (regulatory, compliance, risk, trading rules)
 
 ## 📄 License
 

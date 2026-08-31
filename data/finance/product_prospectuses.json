@@ -1,0 +1,32 @@
+{
+  "disclaimer": "SAMPLE DATA - fictional, for testing/demo purposes only. Not real regulatory text, not investment advice, not reviewed by a compliance or legal professional. All fund names, CUSIPs, tickers, and figures below are fictional placeholders invented for this demo and do not refer to any real security.",
+  "prospectuses": [
+    {
+      "id": "prospectus_001",
+      "fund_name": "Meridian Capital Partners Balanced Growth Fund (fictional fund, used for this example)",
+      "ticker": "MCPBX",
+      "cusip": "000000000-FAKE-1",
+      "product_type": "Mutual Fund",
+      "content": "\n                        FICTIONAL PROSPECTUS EXCERPT (SAMPLE DATA - NOT A REAL OFFERING).\n\n                        Investment Objective: Seeks long-term capital appreciation with a secondary\n                        goal of modest income, through a blended allocation of equities and\n                        investment-grade bonds.\n\n                        Investment Strategy: The fund invests approximately 60% in large- and\n                        mid-cap equities and approximately 40% in investment-grade fixed income\n                        securities, rebalanced quarterly.\n\n                        Principal Risks (illustrative): market risk, interest rate risk, equity\n                        volatility risk, credit risk of bond issuers. Past performance (fictional)\n                        does not guarantee future results.\n\n                        Fees (illustrative, fictional): Management fee 0.65%, estimated total annual\n                        operating expenses 0.85%.\n                        ",
+      "category": "Mutual Fund Prospectus"
+    },
+    {
+      "id": "prospectus_002",
+      "fund_name": "Solara Biotech Inc. Corporate Bond Offering (fictional company, used for this example)",
+      "ticker": "N/A",
+      "cusip": "111111111-FAKE-2",
+      "product_type": "Corporate Bond",
+      "content": "\n                        FICTIONAL PROSPECTUS EXCERPT (SAMPLE DATA - NOT A REAL OFFERING).\n\n                        Issuer: Solara Biotech Inc. (fictional company, used for this example).\n                        Instrument: 10-year senior unsecured notes, fictional coupon rate 5.25%,\n                        fictional maturity date 2036-08-31.\n\n                        Use of Proceeds (illustrative): general corporate purposes, including\n                        fictional R&D funding and working capital.\n\n                        Principal Risks (illustrative): issuer credit risk, interest rate risk,\n                        liquidity risk if the notes are thinly traded, early redemption risk under\n                        fictional call provisions.\n                        ",
+      "category": "Bond Prospectus"
+    },
+    {
+      "id": "prospectus_003",
+      "fund_name": "Cascade National Derivatives Access ETF (fictional fund, used for this example)",
+      "ticker": "CNDX",
+      "cusip": "222222222-FAKE-3",
+      "product_type": "ETF / Derivatives-Linked",
+      "content": "\n                        FICTIONAL PROSPECTUS EXCERPT (SAMPLE DATA - NOT A REAL OFFERING).\n\n                        Investment Objective: Seeks to provide fictional exposure to a basket of\n                        equity index options strategies for enhanced income generation.\n\n                        Investment Strategy: Employs a fictional covered-call overlay on a broad\n                        equity index, writing exchange-listed call options against a long equity\n                        position.\n\n                        Principal Risks (illustrative): options/derivatives risk, capped upside risk,\n                        market risk, complexity risk. This product is generally intended for\n                        investors who understand options strategies; suitability should be assessed\n                        per firm policy before recommendation.\n                        ",
+      "category": "ETF Prospectus"
+    }
+  ]
+}

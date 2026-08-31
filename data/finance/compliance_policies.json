@@ -1,0 +1,37 @@
+{
+  "disclaimer": "SAMPLE DATA - fictional, for testing/demo purposes only. Not real regulatory text, not investment advice, not reviewed by a compliance or legal professional. These are fictional internal-policy templates written for this project to illustrate structure, not real policies of any firm and not legal guidance.",
+  "compliance_policies": [
+    {
+      "id": "policy_template_001",
+      "title": "Fictional KYC / Customer Onboarding Policy Template",
+      "firm_name": "Meridian Capital Partners (a fictional firm used for this example)",
+      "category": "KYC / AML",
+      "content": "\n                        FICTIONAL POLICY TEMPLATE (SAMPLE DATA).\n\n                        Purpose: Establish a general process for verifying new customer identity and\n                        assessing risk before account opening.\n\n                        Illustrative steps:\n                        1. Collect government-issued identification and basic contact/employment info.\n                        2. Screen the customer name against sanctions and watch lists.\n                        3. Assign a fictional risk rating (low / medium / high) based on account type,\n                           expected activity, and geography.\n                        4. Apply enhanced due diligence for higher-risk profiles (e.g., politically\n                           exposed persons), per firm policy.\n                        5. Periodically refresh customer information per the firm's review cycle.\n\n                        This is a simplified illustrative template, not a complete or compliant policy.\n                        ",
+      "tags": ["kyc", "onboarding", "risk-rating"]
+    },
+    {
+      "id": "policy_template_002",
+      "title": "Fictional AML Transaction Monitoring Policy Template",
+      "firm_name": "Northbridge Advisory Group (a fictional firm used for this example)",
+      "category": "AML",
+      "content": "\n                        FICTIONAL POLICY TEMPLATE (SAMPLE DATA).\n\n                        Purpose: Describe a general approach to monitoring customer transactions for\n                        patterns that may indicate money laundering or other financial crime.\n\n                        Illustrative steps:\n                        1. Apply automated rules to flag transactions above fictional thresholds or\n                           matching fictional suspicious patterns (e.g., structuring).\n                        2. Route flagged transactions to a compliance analyst for manual review.\n                        3. Document the review outcome and escalate confirmed concerns for a\n                           suspicious activity report (SAR) filing decision.\n                        4. Retain records per the firm's audit trail and retention policy.\n\n                        This is a simplified illustrative template, not a complete or compliant policy.\n                        ",
+      "tags": ["aml", "transaction-monitoring", "sar"]
+    },
+    {
+      "id": "policy_template_003",
+      "title": "Fictional Data Handling & Encryption Policy Template",
+      "firm_name": "Cascade National Bank (a fictional firm used for this example)",
+      "category": "Data Security",
+      "content": "\n                        FICTIONAL POLICY TEMPLATE (SAMPLE DATA).\n\n                        Purpose: Describe a general approach to protecting sensitive customer\n                        financial data (PII, account numbers, transaction history).\n\n                        Illustrative controls:\n                        1. Encrypt sensitive data at rest and in transit.\n                        2. Mask or truncate identifiers (e.g., show only last 4 digits of an account\n                           number) in logs and UI wherever full values are not required.\n                        3. Restrict access to sensitive data using role-based access control (RBAC).\n                        4. Log access to sensitive records for audit purposes, without logging the\n                           sensitive values themselves.\n\n                        This is a simplified illustrative template, not a complete or compliant policy.\n                        ",
+      "tags": ["encryption", "pii", "rbac", "data-security"]
+    },
+    {
+      "id": "policy_template_004",
+      "title": "Fictional Investment Suitability Review Policy Template",
+      "firm_name": "Meridian Capital Partners (a fictional firm used for this example)",
+      "category": "Suitability",
+      "content": "\n                        FICTIONAL POLICY TEMPLATE (SAMPLE DATA).\n\n                        Purpose: Describe a general approach to assessing whether a recommended\n                        product or strategy fits a customer's investment profile.\n\n                        Illustrative steps:\n                        1. Capture the customer's stated risk tolerance, time horizon, liquidity\n                           needs, and investment experience.\n                        2. Compare the proposed product's risk/complexity profile against the\n                           customer's profile.\n                        3. Document the suitability rationale before executing the recommendation.\n                        4. Periodically re-assess suitability when the customer's profile changes.\n\n                        This is a simplified illustrative template, not a complete or compliant policy.\n                        ",
+      "tags": ["suitability", "investment-profile"]
+    }
+  ]
+}
