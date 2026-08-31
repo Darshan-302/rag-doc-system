@@ -1,0 +1,42 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content. All claim numbers, names, and amounts are synthetic.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "claims": [
+    {
+      "id": "claim_ins_001",
+      "claim_number": "MMI-CLM-20260214-0001-SAMPLE",
+      "policy_number": "MMI-AUTO-0001234-SAMPLE",
+      "company": "Meridian Mutual Insurance (fictional)",
+      "product_type": "auto",
+      "status": "under_review",
+      "date_of_loss": "2026-02-10",
+      "date_filed": "2026-02-14",
+      "content": "\n                        Fictional auto claim. Named Insured Jordan A. Sample reported a\n                        rear-end collision on 2026-02-10. Claim filed 2026-02-14.\n\n                        Claim Number: MMI-CLM-20260214-0001-SAMPLE\n                        Status: Under Review\n                        Estimated Repair Cost: $4,320.00 (fictional estimate)\n                        Adjuster: Fictional Adjuster #A-118\n\n                        Workflow stage: Initial review -> Damage assessment -> Estimate\n                        approval -> Payment issued -> Claim closed. This claim is currently\n                        at the 'Damage assessment' stage.\n                        ",
+      "workflow_stage": "damage_assessment"
+    },
+    {
+      "id": "claim_ins_002",
+      "claim_number": "NHG-CLM-20260305-0002-SAMPLE",
+      "policy_number": "NHG-HOME-0009876-SAMPLE",
+      "company": "Northstar Harbor Group (fictional)",
+      "product_type": "homeowners",
+      "status": "approved",
+      "date_of_loss": "2026-02-28",
+      "date_filed": "2026-03-05",
+      "content": "\n                        Fictional homeowners claim for wind damage to roof shingles.\n                        Named Insured Casey R. Example. Claim approved after inspection.\n\n                        Claim Number: NHG-CLM-20260305-0002-SAMPLE\n                        Status: Approved\n                        Approved Payout: $8,750.00 (fictional, after $1,500 deductible)\n                        Adjuster: Fictional Adjuster #B-204\n\n                        Workflow stage: Initial review -> Inspection -> Estimate approval ->\n                        Payment issued -> Claim closed. This claim is currently at\n                        'Payment issued'.\n                        ",
+      "workflow_stage": "payment_issued"
+    },
+    {
+      "id": "claim_ins_003",
+      "claim_number": "EWC-CLM-20260410-0003-SAMPLE",
+      "policy_number": "EWC-HEALTH-0002468-SAMPLE",
+      "company": "Evergreen Wellness Cooperative (fictional)",
+      "product_type": "health",
+      "status": "denied",
+      "date_of_loss": "2026-04-01",
+      "date_filed": "2026-04-10",
+      "content": "\n                        Fictional health insurance claim for an out-of-network specialist visit.\n                        Member Sam P. Illustrative. Claim denied for lack of prior authorization.\n\n                        Claim Number: EWC-CLM-20260410-0003-SAMPLE\n                        Status: Denied\n                        Denial Reason (fictional): 'Prior authorization not obtained for\n                        out-of-network specialist visit.'\n                        Appeal Deadline (fictional): 2026-05-10\n\n                        This is a synthetic example illustrating a claim status/appeal workflow\n                        and does not describe any real member's protected health information.\n                        ",
+      "workflow_stage": "denied_pending_appeal"
+    }
+  ]
+}

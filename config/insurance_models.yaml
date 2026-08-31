@@ -1,0 +1,93 @@
+# Insurance-Optimized Model Configurations
+#
+# SAMPLE / RECOMMENDED CONFIG — for the Insurance Industry RAG Pipeline feature.
+# Follows the same structure as config/models.yaml. These are suggested defaults;
+# tune context_length, chunking, and thresholds to your real document set.
+# See docs/INSURANCE_RAG_GUIDE.md for setup details.
+
+llm_models:
+  mistral:
+    name: "Mistral 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    insurance_notes: "Good default for policy Q&A and claims-status lookups on modest hardware."
+
+  qwen:
+    name: "Qwen 7B"
+    size: "15GB"
+    context_length: 32000
+    parameters: 7000000000
+    speed: "fast"
+    quality: "excellent"
+    insurance_notes: "Good default for development/MVP insurance deployments."
+
+  qwen_32b:
+    name: "Qwen 32B"
+    size: "65GB"
+    context_length: 32000
+    parameters: 32000000000
+    speed: "moderate"
+    quality: "superior"
+    insurance_notes: "Recommended when queries require reasoning across long policy documents or multi-state regulatory comparisons."
+
+  llama2:
+    name: "Llama 2 7B"
+    size: "15GB"
+    context_length: 4096
+    parameters: 7000000000
+    speed: "fast"
+    quality: "good"
+    insurance_notes: "Shorter context window; best for short-form claim-status or FAQ-style queries only."
+
+# Embedding Model Configurations
+embedding_models:
+  bge_large:
+    name: "BGE Large EN v1.5"
+    dimensions: 1024
+    size: "0.3GB"
+    speed: "very_fast"
+    quality: "excellent"
+    insurance_notes: "Default embedding model for indexing policy documents, claims notes, and underwriting guidelines."
+
+  nomic_embed:
+    name: "Nomic Embed Text"
+    dimensions: 768
+    size: "0.2GB"
+    speed: "very_fast"
+    quality: "very_good"
+    insurance_notes: "Lighter-weight alternative for smaller insurance document sets."
+
+# Reranker Model Configurations
+reranker_models:
+  bge_reranker:
+    name: "BGE Reranker Large"
+    size: "0.5GB"
+    use_for: "cross_encoder_ranking"
+    insurance_notes: "Recommended when retrieving from mixed document types (policies + claims + regulations) to prioritize the most relevant source."
+
+# Insurance-specific retrieval tuning (suggested defaults; see docs/INSURANCE_RAG_GUIDE.md)
+insurance_retrieval:
+  chunk_size: 512
+  chunk_overlap: 64
+  top_k_documents: 6
+  similarity_threshold: 0.35
+  notes: >
+    Insurance policy documents often contain dense, clause-structured text (definitions,
+    exclusions, endorsements). A slightly larger overlap than the general default helps
+    avoid splitting a coverage clause across chunk boundaries.
+
+# Domain-specific features this configuration is intended to support.
+# NOTE: these are documented/described capabilities for this docs+config+sample-data
+# feature, not a full trained ML classifier pipeline. See docs/INSURANCE_RAG_GUIDE.md
+# "Domain-Specific Features" section for how each would be implemented.
+insurance_domain_features:
+  - policy_number_extraction_validation
+  - coverage_type_classification
+  - claim_status_tracking
+  - premium_calculation_assistance
+  - risk_assessment_queries
+  - compliance_checking_state_wise
+  - customer_policy_lookup

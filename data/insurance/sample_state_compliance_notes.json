@@ -1,0 +1,36 @@
+{
+  "_disclaimer": "SAMPLE DATA — fictional, for testing/demo purposes only, not real regulatory or policy content. These notes are general, plain-language summaries of common regulatory concepts written in our own words for illustration. They are NOT quotes from any statute or regulation, are NOT exhaustive or current, and are NOT legal advice. A real deployment must consult qualified compliance counsel and the actual regulations of each relevant state.",
+  "_source": "Synthetic examples created for the Insurance Industry RAG Pipeline feature (docs/INSURANCE_RAG_GUIDE.md).",
+  "compliance_notes": [
+    {
+      "id": "reg_ins_001",
+      "state": "IL",
+      "topic": "Rate filing (general concept)",
+      "content": "\n                        General concept, in our own words: many states require insurers to\n                        file proposed rates and rating plans with a state insurance regulator\n                        before use, and some lines require prior approval rather than just\n                        notification. This note is a simplified, generic description for\n                        demonstration purposes -- it is not a summary of any specific Illinois\n                        statute and must not be relied on for compliance purposes."
+    },
+    {
+      "id": "reg_ins_002",
+      "state": "TX",
+      "topic": "Claims handling timelines (general concept)",
+      "content": "\n                        General concept, in our own words: many states set expectations around\n                        how quickly an insurer must acknowledge a claim, investigate it, and\n                        communicate a decision to the policyholder, with escalating requirements\n                        if a claim is delayed or denied. This note is a generic illustration only\n                        and is not a summary of Texas's actual claims-handling requirements."
+    },
+    {
+      "id": "reg_ins_003",
+      "state": "CA",
+      "topic": "Unfair claims practices (general concept)",
+      "content": "\n                        General concept, in our own words: states commonly prohibit specific\n                        unfair practices in claims handling, such as misrepresenting policy\n                        provisions, failing to promptly investigate, or offering settlements\n                        substantially lower than what a reasonable investigation supports. This\n                        is a generic, illustrative description only, not a summary of any\n                        specific California statute or regulation."
+    },
+    {
+      "id": "reg_ins_004",
+      "state": "NY",
+      "topic": "Health insurance / HIPAA-adjacent privacy concept",
+      "content": "\n                        General concept, in our own words: health insurers and their business\n                        associates that handle protected health information (PHI) are generally\n                        expected to apply administrative, physical, and technical safeguards\n                        (access controls, encryption, audit logging, breach notification\n                        procedures), consistent with the general aims of HIPAA in the US.\n                        This note is a simplified, generic overview for demonstration only --\n                        see docs/INSURANCE_RAG_GUIDE.md's compliance section and consult\n                        qualified compliance/privacy counsel for a real deployment."
+    },
+    {
+      "id": "reg_ins_005",
+      "state": "FL",
+      "topic": "Data retention (general concept)",
+      "content": "\n                        General concept, in our own words: insurers are commonly expected to\n                        retain policy, claims, and underwriting records for a defined minimum\n                        period to support audits, disputes, and regulatory examinations, with\n                        longer retention sometimes required for certain lines or records\n                        involving minors. This is a generic illustration only; see\n                        docs/INSURANCE_RAG_GUIDE.md's data retention section for a\n                        non-authoritative discussion of the general concept."
+    }
+  ]
+}
