@@ -178,14 +178,19 @@ rag-system/
 │   ├── chunking_strategies.yaml
 │   ├── healthcare_models.yaml   # Healthcare-oriented model config
 │   ├── healthcare_prompts.yaml  # Medical-terminology-aware prompts
-│   └── drug_database.yaml       # Synthetic/illustrative drug reference config
+│   ├── drug_database.yaml       # Synthetic/illustrative drug reference config
+│   ├── insurance_models.yaml   # Insurance-optimized model configs
+│   ├── insurance_prompts.yaml  # Insurance-specific prompts
+│   └── insurance.env.example   # Sample .env for insurance deployments
 ├── docs/
 │   ├── ARCHITECTURE.md     # Full architecture plan
 │   ├── API.md              # API documentation
 │   ├── DEPLOYMENT.md       # Deployment guides
 │   ├── TUNING.md           # Model & retrieval tuning
 │   ├── HEALTHCARE_RAG_GUIDE.md    # HIPAA/PHI design notes for healthcare RAG
-│   └── HEALTHCARE_EXAMPLES.md     # Healthcare example queries (synthetic data)
+│   ├── HEALTHCARE_EXAMPLES.md     # Healthcare example queries (synthetic data)
+│   ├── INSURANCE_RAG_GUIDE.md   # Insurance RAG setup & compliance
+│   └── INSURANCE_EXAMPLES.md    # Insurance example queries/policies
 ├── data/
 │   └── healthcare/         # Synthetic healthcare sample data (see data/healthcare/README.md)
 ├── pyproject.toml          # Poetry dependencies
@@ -418,6 +423,10 @@ docker-compose up -d    # Restart
 - [TUNING.md](docs/TUNING.md) - Performance optimization
 - [HEALTHCARE_RAG_GUIDE.md](docs/HEALTHCARE_RAG_GUIDE.md) - Healthcare-domain RAG pipeline: HIPAA/PHI handling concepts, security & compliance design notes (see disclaimer in the guide)
 - [HEALTHCARE_EXAMPLES.md](docs/HEALTHCARE_EXAMPLES.md) - Example healthcare queries and flows (synthetic sample data only)
+- [INSURANCE_RAG_GUIDE.md](docs/INSURANCE_RAG_GUIDE.md) - Insurance industry RAG pipeline: setup, domain-specific features, and compliance (HIPAA, state regulations)
+- [INSURANCE_EXAMPLES.md](docs/INSURANCE_EXAMPLES.md) - Example insurance policies, claims workflows, and queries (fictional sample data)
+- [FINANCE_RAG_GUIDE.md](docs/FINANCE_RAG_GUIDE.md) - Finance industry RAG pipeline: regulatory compliance, data sources, and compliance design notes
+- [FINANCE_EXAMPLES.md](docs/FINANCE_EXAMPLES.md) - Worked finance query examples (regulatory, compliance, risk, trading rules)
 
 ## 📄 License
 
