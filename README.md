@@ -175,12 +175,17 @@ rag-system/
 ├── config/
 │   ├── models.yaml         # Model configurations
 │   ├── prompts.yaml        # System prompts, few-shot examples
-│   └── chunking_strategies.yaml
+│   ├── chunking_strategies.yaml
+│   ├── insurance_models.yaml   # Insurance-optimized model configs
+│   ├── insurance_prompts.yaml  # Insurance-specific prompts
+│   └── insurance.env.example   # Sample .env for insurance deployments
 ├── docs/
 │   ├── ARCHITECTURE.md     # Full architecture plan
 │   ├── API.md              # API documentation
 │   ├── DEPLOYMENT.md       # Deployment guides
-│   └── TUNING.md           # Model & retrieval tuning
+│   ├── TUNING.md           # Model & retrieval tuning
+│   ├── INSURANCE_RAG_GUIDE.md   # Insurance RAG setup & compliance
+│   └── INSURANCE_EXAMPLES.md    # Insurance example queries/policies
 ├── pyproject.toml          # Poetry dependencies
 └── docker-compose.yml      # Development stack
 ```
@@ -409,6 +414,8 @@ docker-compose up -d    # Restart
 - [API.md](docs/API.md) - API reference
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Cloud deployment guides
 - [TUNING.md](docs/TUNING.md) - Performance optimization
+- [INSURANCE_RAG_GUIDE.md](docs/INSURANCE_RAG_GUIDE.md) - Insurance industry RAG pipeline: setup, domain-specific features, and compliance (HIPAA, state regulations)
+- [INSURANCE_EXAMPLES.md](docs/INSURANCE_EXAMPLES.md) - Example insurance policies, claims workflows, and queries (fictional sample data)
 
 ## 📄 License
 
