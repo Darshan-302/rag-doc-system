@@ -30,6 +30,46 @@ A production-ready, multi-tenant Retrieval-Augmented Generation (RAG) platform f
 - int8: 50% reduction in VRAM usage
 - fp16: Full precision (no reduction)
 
+### 🧭 Model Selection Guide
+
+Model choice is entirely runtime-configurable (`LLM_MODEL` env var, no code
+changes required - see [.env.example](.env.example)), backed by
+[config/models.yaml](config/models.yaml) which now carries full metadata
+(VRAM at every quantization level, expected latency, throughput, max batch
+size) for `mistral`, `qwen`, `qwen_32b`, and `llama2`. At startup, or any
+time you want a second opinion, run:
+
+```bash
+python scripts/validate_system.py         # checks RAM/disk/GPU/Ollama + your configured model
+python scripts/select_models.py --list    # table of every model + whether it fits this machine
+python scripts/select_models.py --recommend  # best-quality model that fits, given RAM_AVAILABLE_GB
+```
+
+If the configured model doesn't fit, the pipeline automatically walks
+`MODEL_FALLBACK_CHAIN` (e.g. `qwen:32b,qwen:7b,mistral:7b`) and picks the
+first model that fits in `RAM_AVAILABLE_GB` at `QUANTIZATION_METHOD` - see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#model-selection--fallback-strategy)
+for the full fallback/degradation strategy.
+
+**How to choose:**
+1. Start from your available RAM (or GPU VRAM, if you have a dedicated GPU).
+2. Pick the largest model whose fp16 VRAM requirement fits comfortably below
+   that figure, leaving headroom for Ollama, Weaviate, Postgres, Redis, and
+   MinIO running alongside it.
+3. If your preferred model doesn't fit in fp16, check `int8` (~50% smaller)
+   or `int4` (~75% smaller) before dropping to a smaller model - quality
+   impact is small (1-3%, see `quantizations` in `config/models.yaml`).
+4. Always set `MODEL_FALLBACK_CHAIN` so a temporary resource shortage
+   degrades gracefully instead of crashing.
+
+**Worked examples:**
+
+| Deployment | Recommended model | Config | Why |
+|---|---|---|---|
+| **16GB RAM** (dev/MVP laptop) | Qwen 7B or Mistral 7B, fp16 | `LLM_MODEL=qwen:7b`<br>`QUANTIZATION_METHOD=fp16` | 8GB VRAM leaves ~8GB for the rest of the stack; fast (~6.5s p95), good quality for MVP work. |
+| **32GB RAM** (small production) | Qwen 32B, int4 | `LLM_MODEL=qwen:32b`<br>`QUANTIZATION_METHOD=int4`<br>`MODEL_FALLBACK_CHAIN=qwen:32b,qwen:7b,mistral:7b` | int4 shrinks Qwen 32B to ~8GB VRAM, so you get "superior" quality output with room to spare - the fallback chain drops to Qwen 7B automatically if another process eats the headroom. |
+| **48GB+ RAM** (enterprise) | Qwen 32B, fp16 (or int8 for more headroom) | `LLM_MODEL=qwen:32b`<br>`QUANTIZATION_METHOD=fp16`<br>`MODEL_FALLBACK_CHAIN=qwen:32b,qwen:7b,mistral:7b` | Full 32GB fp16 weights fit with room for concurrent requests (`MAX_CONCURRENT_REQUESTS=8`); use `int8` (16GB) instead if you're also running large concurrent embedding workloads. |
+
 ## 📋 Tech Stack
 
 | Component | Choice | Rationale |
@@ -100,6 +140,20 @@ docker exec rag_ollama ollama pull nomic-embed-text:latest
 # For 48GB+ RAM (High Quality)
 docker exec rag_ollama ollama pull qwen:32b
 docker exec rag_ollama ollama pull nomic-embed-text:latest
+```
+
+Not sure which model to pick, whether it will fit, or how much disk it
+needs? Use the interactive helper instead of guessing:
+
+```bash
+# Validate RAM/disk/GPU/Ollama and check whether your configured LLM_MODEL fits
+python scripts/validate_system.py
+
+# See every model's fit status on this machine, get a recommendation, and
+# download + verify it (validates disk space first, verifies via `ollama list` after)
+python scripts/select_models.py --list
+python scripts/select_models.py --recommend
+python scripts/select_models.py --pull qwen        # or: --pull qwen --dry-run
 ```
 
 **Model Sizes** (after download):
@@ -355,7 +409,11 @@ Key metrics:
 
 ## 📝 Configuration
 
-Environment variables in `.env`:
+See [.env.example](.env.example) for the full, commented list of every
+environment variable (API, database, Redis, Weaviate, Ollama/model
+selection, document processing, retrieval, MinIO, multi-tenancy, rate
+limiting, Celery) plus ready-to-uncomment example configs for 16GB/32GB/48GB
+deployments. Quick reference:
 
 ```env
 # Database

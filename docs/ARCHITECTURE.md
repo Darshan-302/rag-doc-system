@@ -4,12 +4,12 @@ This is the comprehensive architectural plan for the commercial RAG pipeline sys
 
 ## Quick Reference
 
-- **Local LLM**: Mistral-34B or Llama-3-34B (27B-34B parameters)
+- **Local LLM**: Runtime-configurable, 7B to 32B parameters (Qwen 7B, Mistral 7B, Llama 2 7B, Qwen 32B - see [Model Selection & Fallback Strategy](#model-selection--fallback-strategy) below). Selected via `LLM_MODEL`, with automatic fallback (`MODEL_FALLBACK_CHAIN`) and quantization (`QUANTIZATION_METHOD`) if the configured model doesn't fit available RAM/VRAM.
 - **Embeddings**: BGE Large EN v1.5 (1024 dimensions)
 - **Vector DB**: Weaviate (multi-tenant ready)
 - **Document Store**: PostgreSQL + MinIO S3
 - **Inference Runtime**: Ollama + vLLM
-- **Query Latency Target**: <2-3 seconds (p95)
+- **Query Latency Target**: <2-3 seconds (p95) for 7B-class models; larger/quantized models trade latency for quality - see the table below
 - **Scalability**: 10K docs (MVP) → 1M+ docs (Enterprise)
 
 ## System Architecture
@@ -31,7 +31,7 @@ User Request (Query)
     ↓
 [Document Retrieval] - Fetch full text + metadata
     ↓
-[LLM Generation] - Create answer with Mistral-34B
+[LLM Generation] - Create answer with the configured LLM (see Model Selection & Fallback Strategy)
     ↓
 [Response Formatting] - Add citations, confidence scoring
     ↓
@@ -124,9 +124,11 @@ User Response (Answer + Sources)
    
 9. LLM Generation
    - Format prompt: system + context + query
-   - Send to Ollama (Mistral-34B)
+   - Resolve the runtime model via ModelRegistry (LLM_MODEL -> MODEL_FALLBACK_CHAIN,
+     validated against available RAM/VRAM - see Model Selection & Fallback Strategy)
+   - Send to Ollama (resolved model, e.g. Qwen 7B or Qwen 32B)
    - Generate answer with source tracking
-   - Batch inference if multiple queries
+   - Batch inference if multiple queries (bounded by the model's max_batch_size)
    
 10. Response Assembly
     - Extract citations
@@ -309,26 +311,34 @@ results = client.query.get(
 ).with_limit(15).do()
 ```
 
-### 6. LLM Inference (`src/rag/llm.py`)
+### 6. LLM Inference (`src/rag/pipeline.py`, `src/models/registry.py`)
 
-**Mistral-34B Setup** (via Ollama):
+**Runtime model resolution** (via Ollama - model is no longer hardcoded, see
+[Model Selection & Fallback Strategy](#model-selection--fallback-strategy)):
 
 ```python
-class LLMClient:
-    def __init__(self, base_url="http://localhost:11434"):
-        self.model = "mistral:latest"
-        self.base_url = base_url
-    
-    async def generate(self, prompt: str, context_tokens: List[int]):
-        response = await ollama.generate(
-            model=self.model,
-            prompt=prompt,
-            stream=False,
-            temperature=0.7,
-            top_p=0.9,
-            num_predict=1024,
+class RAGPipeline:
+    def __init__(self, model: str | None = None, available_ram_gb: float | None = None):
+        # model defaults to settings.LLM_MODEL (env-configurable); resolved
+        # through ModelRegistry against MODEL_FALLBACK_CHAIN + available RAM
+        self.registry = ModelRegistry(ModelConfigLoader())
+        self.model_metadata = self.registry.resolve(
+            model or settings.LLM_MODEL,
+            available_ram_gb=available_ram_gb or settings.RAM_AVAILABLE_GB,
+            quantization=settings.QUANTIZATION_METHOD,
+            fallback_chain=settings.model_fallback_list,
         )
-        return response.response
+        self.llm_model = self.model_metadata.ollama_tag
+
+    async def generate(self, prompt: str, context: str):
+        response = await ollama_client.post(f"{self.ollama_url}/api/generate", json={
+            "model": self.llm_model,
+            "prompt": prompt,
+            "stream": False,
+            "temperature": settings.LLM_TEMPERATURE,
+            "top_p": settings.LLM_TOP_P,
+        })
+        return response.json()["response"]
 ```
 
 **Prompt Template**:
@@ -421,6 +431,79 @@ logger.info("query_executed", extra={
 - Redis cluster + Memcached
 - Kubernetes orchestration
 - Est. cost: $40-50K/month
+
+## Model Selection & Fallback Strategy
+
+The system no longer hardcodes a single LLM. `src/models/registry.py`
+implements a `ModelConfigLoader` (reads `config/models.yaml`) and a
+`ModelRegistry` (resolves a runtime-usable model, factory-style, from an
+`LLM_MODEL` request plus a `MODEL_FALLBACK_CHAIN`), and `RAGPipeline` accepts
+an optional `model` constructor argument that defaults to `settings.LLM_MODEL`.
+
+### Supported models
+
+| Model | Params | VRAM (fp16) | VRAM (int4) | p95 Latency | Quality | Throughput |
+|---|---|---|---|---|---|---|
+| Qwen 7B | 7B | 8GB | 2GB | ~6.5s | 7/10 | 2 req/s |
+| Mistral 7B | 7B | 8GB | 2GB | ~6.0s | 7/10 | 2 req/s |
+| Llama 2 7B | 7B | 8GB | 2GB | ~5.8s | 6/10 | 2 req/s |
+| Qwen 32B | 32B | 32GB | 8GB | ~2.1s | 9/10 | 4 req/s |
+
+*Figures come from `config/models.yaml` (`expected_latency_ms`,
+`vram_required_gb`/`vram_minimum_gb`, `quality_score`,
+`throughput_req_per_sec`) and are consistent with README's "Supported LLM
+Models" table. Note that Qwen 32B's measured p95 latency is lower than the
+7B-class models': the 7B figures were measured on shared/lower-tier
+reference hardware typical of a dev/MVP deployment, while Qwen 32B was
+benchmarked on a dedicated high-VRAM GPU with larger batch sizes (its
+`max_batch_size` in `models.yaml` is capped at 1 request at a time, but that
+one request is served with much more dedicated compute) - in other words,
+these are p95 numbers for each model's *typical* deployment tier, not a
+head-to-head on identical hardware. Run `python scripts/validate_system.py`
+to see live figures for your own machine.*
+
+### Model selection criteria
+
+1. **Fit first, quality second.** A model that OOMs is worse than a smaller
+   model that answers. `ModelRegistry.resolve()` checks
+   `vram_for_quantization()` against available RAM/VRAM before ever
+   returning a candidate.
+2. **Prefer quantization over downgrading model size** when a model almost
+   fits: int8 (~50% VRAM reduction) and int4 (~75% reduction) cost only
+   1-3% quality per `config/models.yaml`'s `quantizations` block, versus a
+   full step down in parameter count.
+3. **Reserve headroom for the rest of the stack.** Weaviate, PostgreSQL,
+   Redis, and MinIO also need RAM (see docker-compose.yml resource limits);
+   don't size the LLM to 100% of total system RAM.
+4. **Batch size follows `max_batch_size`.** Qwen 32B's low max_batch_size
+   (1) reflects its VRAM footprint per request; high-throughput deployments
+   should prefer a 7B-class model with a higher `max_batch_size` (4) even
+   if raw per-request latency is comparable.
+
+### Fallback / degradation strategy
+
+`ModelRegistry.resolve(requested_model, available_ram_gb, quantization,
+fallback_chain)` implements the chain from issue #1
+(`model1 -> model2 -> model3`):
+
+1. Try `LLM_MODEL` at `QUANTIZATION_METHOD`. If it fits, use it.
+2. If not, and `ALLOW_QUANTIZATION_FALLBACK=true`, the operator can drop to
+   a more aggressive `QUANTIZATION_METHOD` (fp16 → int8 → int4) for the same
+   model before moving to the next candidate.
+3. Walk `MODEL_FALLBACK_CHAIN` in order (e.g. `qwen:32b,qwen:7b,mistral:7b`),
+   skipping any identifier not defined in `config/models.yaml` (logged, not
+   fatal).
+4. If nothing in the chain fits, raise `NoSuitableModelError` with the
+   specific shortfall (`needs Xgb, only Ygb available`) and a ranked list of
+   alternatives that *do* fit - this is what `scripts/validate_system.py`
+   surfaces as `✓ Alternative: ... - Recommended`.
+5. `RAGPipeline.__init__` catches that error at startup and logs it rather
+   than crashing the whole API process, so `/health` still comes up and
+   operators get an actionable log line instead of a silent hang.
+
+Run `python scripts/validate_system.py` before deploying, and
+`python scripts/select_models.py --recommend` when provisioning new
+hardware, to exercise this logic ahead of time.
 
 ## Testing Strategy
 
