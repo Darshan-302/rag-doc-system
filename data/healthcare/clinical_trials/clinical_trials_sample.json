@@ -1,0 +1,60 @@
+{
+  "disclaimer": "SAMPLE DATA -- fictional, for testing/demo purposes only. Not real medical guidance. Not reviewed by a medical professional. Do not use for actual clinical, diagnostic, or treatment decisions.",
+  "synthetic": true,
+  "source_note": "All trial IDs, sponsors, and eligibility criteria below are fabricated for demonstration and do not correspond to real studies on ClinicalTrials.gov or elsewhere.",
+  "trials": [
+    {
+      "trial_id": "SYNTH-TRIAL-001",
+      "title": "Example Study of a Fictional Intervention for Example Condition X (Synthetic)",
+      "sponsor": "Fictional Health Research Institute (fabricated, not a real organization)",
+      "status_example": "recruiting (example only)",
+      "phase_example": "Phase 2 (example only)",
+      "condition_example": "Example Condition X",
+      "eligibility_example": {
+        "min_age": "18 years (example)",
+        "max_age": "75 years (example)",
+        "criteria": [
+          "Illustrative: adult participants",
+          "Illustrative: diagnosed with Example Condition X per fictional criteria",
+          "Illustrative: not enrolled in another example study within 30 days"
+        ]
+      },
+      "locations_example": ["Example City, Example State (fictional)"]
+    },
+    {
+      "trial_id": "SYNTH-TRIAL-002",
+      "title": "Example Comparative Study of Two Fictional Approaches for Example Condition Y (Synthetic)",
+      "sponsor": "Fictional Health Research Institute (fabricated, not a real organization)",
+      "status_example": "not yet recruiting (example only)",
+      "phase_example": "Phase 3 (example only)",
+      "condition_example": "Example Condition Y",
+      "eligibility_example": {
+        "min_age": "21 years (example)",
+        "max_age": "70 years (example)",
+        "criteria": [
+          "Illustrative: adult participants",
+          "Illustrative: stable on current example management for at least 3 months",
+          "Illustrative: no history of a second fictional excluded condition"
+        ]
+      },
+      "locations_example": ["Example Town, Example State (fictional)"]
+    },
+    {
+      "trial_id": "SYNTH-TRIAL-003",
+      "title": "Example Pilot Study of a Fictional Digital Tool for Example Condition Z (Synthetic)",
+      "sponsor": "Fictional Health Research Institute (fabricated, not a real organization)",
+      "status_example": "completed (example only)",
+      "phase_example": "Pilot / Phase 1 (example only)",
+      "condition_example": "Example Condition Z",
+      "eligibility_example": {
+        "min_age": "30 years (example)",
+        "max_age": "65 years (example)",
+        "criteria": [
+          "Illustrative: adult participants",
+          "Illustrative: access to a smartphone (example logistical criterion)"
+        ]
+      },
+      "locations_example": ["Example Metro Area, Example State (fictional)"]
+    }
+  ]
+}
