@@ -164,7 +164,39 @@ python scripts/select_models.py --pull qwen        # or: --pull qwen --dry-run
 
 See **Supported LLM Models** section above for detailed specs.
 
-### 3. Initialize Database
+### 3. Build Your Document Corpus
+
+```bash
+# Generate the bundled synthetic sample corpus
+python scripts/download_training_data.py
+python scripts/chunk_and_prepare_data.py
+```
+
+To add real-world data on top of (or instead of) the samples, use
+`scripts/ingest_external_dataset.py` - it appends directly to
+`data/processed/rag_training_data.jsonl` in the same schema, so no reindex
+step is needed:
+
+```bash
+# From a Kaggle dataset you downloaded manually (browser Download button,
+# free account, NO API token needed) and unzipped into the project:
+python scripts/ingest_external_dataset.py \
+  --source local --path data/raw/kaggle_manual/insurance/policies.csv \
+  --text-column description --title-column policy_type \
+  --source-name "Kaggle: imtkaggleteam/insurance"
+
+# From a public Hugging Face dataset (no auth):
+python scripts/ingest_external_dataset.py \
+  --source huggingface --dataset pubmed_qa --hf-config pqa_labeled --hf-split train \
+  --text-column long_answer --title-column question \
+  --source-name "HuggingFace: pubmed_qa"
+
+# From a direct URL / open-data API (no auth), or the Kaggle API
+# (requires `pip install kaggle` + ~/.kaggle/kaggle.json) - see
+# `python scripts/ingest_external_dataset.py --help` for both.
+```
+
+### 4. Initialize Database
 
 ```bash
 # Apply migrations
@@ -177,7 +209,7 @@ python scripts/setup_vector_db.py
 python scripts/load_test_data.py
 ```
 
-### 4. Run API
+### 5. Run API
 
 ```bash
 # Start API server
@@ -186,7 +218,7 @@ python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 # Access API docs: http://localhost:8000/docs
 ```
 
-### 5. Test Query
+### 6. Test Query
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/default-tenant/query" \
