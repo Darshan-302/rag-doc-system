@@ -196,11 +196,19 @@ async def query(tenant_id, query_text):
 ```
 
 **Key Files**:
-- `rag/pipeline.py` - Main orchestration
-- `rag/embedding.py` - Embedding generation, batching, caching
-- `rag/retrieval.py` - Weaviate + PostgreSQL queries
-- `rag/ranking.py` - Cross-encoder reranking (BGE-Reranker)
-- `rag/llm.py` - LLM inference, prompt engineering
+- `rag/pipeline.py` - Main orchestration; falls back to keyword search over the sample JSONL corpus if the vector store is unreachable
+- `rag/embeddings.py` - `OllamaEmbedder` (`/api/embed`, batched) and offline `HashingEmbedder`
+- `rag/indexing.py` - parse -> chunk -> embed -> index for uploads
+- `search/vector_store.py` - `VectorStore` interface; `WeaviateVectorStore` (native multi-tenancy) and `InMemoryVectorStore`
+- `search/hybrid.py` - `Retriever`: BM25 (rank-bm25) + vector search fused with Reciprocal Rank Fusion
+- `security/auth.py` - `X-API-Key` auth with per-key tenant authorisation
+
+*Implemented retrieval:* `RETRIEVAL_MODE` selects `keyword` (BM25), `vector`
+or `hybrid`. Hybrid takes the top 4k (min 20) from each ranker and fuses by
+`sum(1/(RRF_K + rank))`; scores returned to clients are normalised to 0-1. If
+the embedder is down, hybrid degrades to BM25 over the store. Not implemented
+from the plan below: cross-encoder reranking (`rag/ranking.py`), embedding
+caching, PostgreSQL metadata.
 
 ### 3. Document Ingestion (`src/ingestion/`)
 
@@ -249,9 +257,9 @@ class DocumentProcessor:
 
 **Tenant Isolation Strategy**:
 
-1. **Auth Layer**: JWT tokens include `tenant_id` claim
-2. **API Layer**: All requests validated for tenant_id
-3. **Vector DB**: Per-tenant Weaviate collections named `{tenant_uuid}_documents`
+1. **Auth Layer**: *(implemented)* `X-API-Key` header; `API_KEYS="key=tenantA,tenantB;key2=*"` maps keys to tenants (JWT with a `tenant_id` claim is a possible future replacement)
+2. **API Layer**: *(implemented)* FastAPI dependency `require_tenant_access` returns 401 (missing/unknown key) or 403 (key not authorised for the path's `tenant_id`) on every `/api/v1/{tenant_id}/...` route
+3. **Vector DB**: *(implemented)* one multi-tenant Weaviate collection (`WEAVIATE_COLLECTION`) with one Weaviate tenant per `tenant_id`; every store operation is tenant-scoped
 4. **PostgreSQL**: Row-level security (RLS) via tenant_id foreign key
 5. **Audit**: All actions logged with tenant_id
 
@@ -270,7 +278,7 @@ async def tenant_middleware(request: Request, call_next):
 
 ### 5. Vector Database (`src/db/vector_client.py`)
 
-**Weaviate Schema**:
+**Weaviate Schema** (target design; the implemented collection stores `document_id`, `chunk_id`, `text`, `source`, `upload_date`, `file_size_bytes` plus the vector, with tenancy provided by Weaviate tenants rather than a `tenant_id` filter):
 ```graphql
 {
   Document {

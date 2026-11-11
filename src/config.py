@@ -6,6 +6,9 @@ from typing import List, Optional
 
 VALID_QUANTIZATION_METHODS = ("fp16", "int8", "int4")
 VALID_MODEL_SIZES = ("small", "medium", "large")
+VALID_RETRIEVAL_MODES = ("keyword", "vector", "hybrid")
+VALID_VECTOR_STORES = ("weaviate", "memory")
+VALID_EMBEDDERS = ("ollama", "hashing")
 VALID_DOMAINS = ("general", "insurance", "healthcare", "finance")
 
 
@@ -31,6 +34,8 @@ class Settings(BaseSettings):
     # Vector Database (Weaviate)
     WEAVIATE_URL: str = "http://localhost:8080"
     WEAVIATE_API_KEY: str = "weaviate-key"
+    WEAVIATE_GRPC_PORT: int = 50051
+    WEAVIATE_COLLECTION: str = "DocumentChunk"
 
     # Industry domain: selects prompts/model recommendations/audit hook from
     # src/domains (general, insurance, healthcare, finance).
@@ -89,6 +94,25 @@ class Settings(BaseSettings):
     TOP_K_DOCUMENTS: int = 5
     SIMILARITY_THRESHOLD: float = 0.3
 
+    # keyword = BM25 only, vector = embeddings only, hybrid = BM25 + vector
+    # fused with Reciprocal Rank Fusion.
+    RETRIEVAL_MODE: str = "hybrid"
+    # weaviate = persistent, one Weaviate tenant per API tenant;
+    # memory = process-local (dev/tests, lost on restart).
+    VECTOR_STORE: str = "weaviate"
+    # ollama = real embeddings via OLLAMA_BASE_URL; hashing = deterministic
+    # offline feature-hashing embedder (no network, lower quality).
+    EMBEDDER: str = "ollama"
+    RRF_K: int = 60
+    # JSONL of public demo chunks used when the vector store/embedder is
+    # unreachable or a tenant has no indexed documents. Blank disables it.
+    SAMPLE_CORPUS_PATH: str = "data/processed/rag_training_data.jsonl"
+
+    # API authentication (see src/security/auth.py).
+    # API_KEYS format: "key1=tenantA,tenantB;key2=*"  ("*" = every tenant)
+    AUTH_ENABLED: bool = True
+    API_KEYS: str = ""
+
     # S3 / MinIO
     MINIO_ENDPOINT: str = "localhost:9000"
     MINIO_USER: str = "minioadmin"
@@ -139,6 +163,30 @@ class Settings(BaseSettings):
             raise ValueError(
                 f"QUANTIZATION_METHOD must be one of {VALID_QUANTIZATION_METHODS}, got '{value}'"
             )
+        return value
+
+    @field_validator("RETRIEVAL_MODE")
+    @classmethod
+    def _validate_retrieval_mode(cls, value: str) -> str:
+        value = value.strip().lower()
+        if value not in VALID_RETRIEVAL_MODES:
+            raise ValueError(f"RETRIEVAL_MODE must be one of {VALID_RETRIEVAL_MODES}, got '{value}'")
+        return value
+
+    @field_validator("VECTOR_STORE")
+    @classmethod
+    def _validate_vector_store(cls, value: str) -> str:
+        value = value.strip().lower()
+        if value not in VALID_VECTOR_STORES:
+            raise ValueError(f"VECTOR_STORE must be one of {VALID_VECTOR_STORES}, got '{value}'")
+        return value
+
+    @field_validator("EMBEDDER")
+    @classmethod
+    def _validate_embedder(cls, value: str) -> str:
+        value = value.strip().lower()
+        if value not in VALID_EMBEDDERS:
+            raise ValueError(f"EMBEDDER must be one of {VALID_EMBEDDERS}, got '{value}'")
         return value
 
     @field_validator("PREFERRED_MODEL_SIZE")

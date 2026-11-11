@@ -255,6 +255,7 @@ def api(tmp_path, monkeypatch):
     monkeypatch.setenv("FINANCE_AUDIT_LOGGING_ENABLED", "true")
     monkeypatch.setenv("FINANCE_AUDIT_LOG_PATH", str(tmp_path / "fin.log"))
     monkeypatch.setattr(main.settings, "DOMAIN", "general")
+    monkeypatch.setattr(main.settings, "AUTH_ENABLED", False)
     prompts = []
 
     class FakeResp:

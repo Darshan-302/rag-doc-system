@@ -15,6 +15,7 @@ from src.models.registry import (
     NoSuitableModelError,
 )
 from src.models.resources import get_available_ram_gb
+from src.search.hybrid import Retriever, build_retriever
 from src.domains import build_prompt, check_escalation, finalize_answer, get_domain_profile
 
 logger = logging.getLogger(__name__)
@@ -46,6 +47,7 @@ class RAGPipeline:
         model: Optional[str] = None,
         registry: Optional[ModelRegistry] = None,
         available_ram_gb: Optional[float] = None,
+        retriever: Optional[Retriever] = None,
         domain: Optional[str] = None,
     ):
         """Initialize RAG pipeline components.
@@ -59,10 +61,13 @@ class RAGPipeline:
             available_ram_gb: RAM/VRAM figure (GB) to validate the model
                 against. Defaults to settings.RAM_AVAILABLE_GB, falling back
                 to an auto-detected value (issue #5).
+            retriever: Tenant-scoped Retriever. Defaults to one built lazily
+                from settings (VECTOR_STORE, EMBEDDER, RETRIEVAL_MODE).
             domain: Industry domain (general/insurance/healthcare/finance)
                 whose prompts and safety behaviour to use. Defaults to
                 settings.DOMAIN.
         """
+        self._retriever = retriever
         self.domain_profile = get_domain_profile(domain or settings.DOMAIN)
         self.ollama_url = settings.OLLAMA_BASE_URL
         self.embedding_model = settings.EMBEDDING_MODEL
@@ -118,55 +123,35 @@ class RAGPipeline:
         start_time = time.time()
 
         try:
-            # Load sample data from prepared chunks
-            try:
-                with open("data/processed/rag_training_data.jsonl", "r") as f:
-                    chunks = [json.loads(line) for line in f if line.strip()]
-            except FileNotFoundError:
-                # Fallback: provide default response
+            hits = await self._retrieve(tenant_id, query, top_k)
+
+            if not hits:
                 return RAGResponse(
-                    answer="No training data found. Please run: python scripts/download_training_data.py && python scripts/chunk_and_prepare_data.py",
+                    answer="No relevant documents found. Upload documents for this tenant first.",
                     sources=[],
                     confidence=0.0,
-                    latency_ms=int((time.time() - start_time) * 1000)
+                    latency_ms=int((time.time() - start_time) * 1000),
                 )
-
-            if not chunks:
-                return RAGResponse(
-                    answer="No documents indexed. Please prepare training data first.",
-                    sources=[],
-                    confidence=0.0,
-                    latency_ms=int((time.time() - start_time) * 1000)
-                )
-
-            # Simple keyword matching for demonstration (no vector DB needed for MVP)
-            relevant_chunks = self._retrieve_by_keywords(query, chunks, top_k)
-
-            if not relevant_chunks:
-                relevant_chunks = chunks[:min(top_k, len(chunks))]
 
             # Format context from retrieved chunks
-            context = "\n\n".join([
-                f"Source: {chunk.get('source', 'Unknown')}\n{chunk.get('text', '')}"
-                for chunk in relevant_chunks
-            ])
+            context = "\n\n".join(
+                f"Source: {h['source']}\n{h['text']}" for h in hits
+            )
 
             # Generate answer using Ollama
             answer = await self._generate_answer(query, context)
 
-            # Calculate confidence based on relevance
-            confidence = min(0.85, 0.5 + (len(relevant_chunks) / (top_k * 2)))
+            confidence = max(0.0, min(0.95, hits[0]["score"]))
 
-            # Format sources
             sources = [
                 {
-                    "document_id": chunk.get("document_id", "unknown"),
-                    "document_name": chunk.get("source", "Unknown Source"),
-                    "chunk_id": chunk.get("chunk_id", 0),
-                    "score": 0.9,
-                    "text": chunk.get("text", "")[:200]
+                    "document_id": h["document_id"],
+                    "document_name": h["source"],
+                    "chunk_id": h["chunk_id"],
+                    "score": round(float(h["score"]), 4),
+                    "text": h["text"][:200],
                 }
-                for chunk in relevant_chunks
+                for h in hits
             ]
 
             latency_ms = int((time.time() - start_time) * 1000)
@@ -182,8 +167,58 @@ class RAGPipeline:
             logger.error(f"Error in RAG query: {str(e)}")
             raise
 
+    @property
+    def retriever(self) -> Retriever:
+        if self._retriever is None:
+            self._retriever = build_retriever()
+        return self._retriever
+
+    async def _retrieve(self, tenant_id: str, query: str, top_k: int) -> list[dict]:
+        """Tenant-scoped retrieval; falls back to the sample JSONL corpus if the store is unreachable."""
+        try:
+            hits = await self.retriever.retrieve(tenant_id, query, top_k)
+            if hits:
+                return [
+                    {"document_id": h.document_id, "source": h.source, "chunk_id": h.chunk_id,
+                     "text": h.text, "score": h.score}
+                    for h in hits
+                ]
+            logger.info("No indexed chunks matched for this tenant; trying the sample corpus")
+        except Exception as e:
+            logger.warning(
+                f"Vector retrieval unavailable ({type(e).__name__}: {e}); "
+                f"falling back to keyword search over the sample corpus"
+            )
+        return self._sample_corpus_fallback(query, top_k)
+
+    def _sample_corpus_fallback(self, query: str, top_k: int) -> list[dict]:
+        """Keyword retrieval over the public demo corpus (not tenant data)."""
+        path = settings.SAMPLE_CORPUS_PATH
+        if not path:
+            return []
+        try:
+            with open(path, "r") as f:
+                chunks = [json.loads(line) for line in f if line.strip()]
+        except FileNotFoundError:
+            logger.warning(f"Sample corpus {path} not found")
+            return []
+        if not chunks:
+            return []
+        scored = self._retrieve_by_keywords(query, chunks, top_k)
+        best = max(1, len(set(query.lower().split())))
+        return [
+            {
+                "document_id": c.get("document_id", "unknown"),
+                "source": c.get("source", "Unknown Source"),
+                "chunk_id": c.get("chunk_id", 0),
+                "text": c.get("text", ""),
+                "score": min(1.0, c["_score"] / best),
+            }
+            for c in scored
+        ]
+
     def _retrieve_by_keywords(self, query: str, chunks: list, top_k: int) -> list:
-        """Simple keyword-based retrieval."""
+        """Simple keyword-based retrieval; each result carries its match count in ``_score``."""
         query_words = set(query.lower().split())
 
         scored_chunks = []
@@ -191,7 +226,7 @@ class RAGPipeline:
             text = chunk.get("text", "").lower()
             score = sum(1 for word in query_words if word in text)
             if score > 0:
-                scored_chunks.append((chunk, score))
+                scored_chunks.append(({**chunk, "_score": score}, score))
 
         # Sort by score and return top-k
         scored_chunks.sort(key=lambda x: x[1], reverse=True)
