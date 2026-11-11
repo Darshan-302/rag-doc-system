@@ -1,12 +1,26 @@
 """FastAPI application entry point."""
 
 import logging
-from fastapi import FastAPI, HTTPException
+from typing import Optional
+
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
-from src.api.schemas import QueryRequest, QueryResponse, DocumentListResponse, HealthCheck
+from src.api.schemas import (
+    DocumentDeleteResponse,
+    DocumentInfo,
+    DocumentListResponse,
+    DocumentUploadResponse,
+    HealthCheck,
+    QueryRequest,
+    QueryResponse,
+)
+from src.ingestion.document_processor import DocumentParseError, DocumentProcessor
+from src.rag.embeddings import EmbeddingError
+from src.rag.indexing import DocumentIndexer, document_type_from_filename, sanitize_filename
 from src.rag.pipeline import RAGPipeline
+from src.security.auth import require_tenant_access
 
 # Logging setup
 logging.basicConfig(level=settings.LOG_LEVEL)
@@ -31,6 +45,20 @@ app.add_middleware(
 
 # Initialize RAG pipeline
 rag_pipeline = RAGPipeline()
+_indexer: Optional[DocumentIndexer] = None
+
+
+def get_pipeline() -> RAGPipeline:
+    return rag_pipeline
+
+
+def get_indexer() -> DocumentIndexer:
+    """Indexer sharing the pipeline retriever's store and embedder."""
+    global _indexer
+    retriever = rag_pipeline.retriever
+    if _indexer is None or _indexer.store is not retriever.store:
+        _indexer = DocumentIndexer(retriever.store, retriever.embedder, on_change=retriever.invalidate)
+    return _indexer
 
 
 @app.on_event("startup")
@@ -39,6 +67,18 @@ async def startup():
     logger.info("Starting RAG System API")
     logger.info(f"Using LLM: {settings.LLM_MODEL}")
     logger.info(f"Ollama URL: {settings.OLLAMA_BASE_URL}")
+    logger.info(f"Retrieval: mode={settings.RETRIEVAL_MODE} store={settings.VECTOR_STORE} embedder={settings.EMBEDDER}")
+    if settings.AUTH_ENABLED:
+        from src.security.auth import parse_api_keys
+
+        try:
+            n = len(parse_api_keys(settings.API_KEYS))
+        except ValueError:
+            n = 0
+        if n == 0:
+            logger.warning("AUTH_ENABLED=true but API_KEYS is empty or invalid; every API request will get 401")
+    else:
+        logger.warning("AUTH_ENABLED=false: API is unauthenticated (development only)")
 
 
 @app.on_event("shutdown")
@@ -63,13 +103,17 @@ async def health_check():
 
 
 @app.post("/api/v1/{tenant_id}/query", response_model=QueryResponse)
-async def query(tenant_id: str, request: QueryRequest):
+async def query(
+    request: QueryRequest,
+    tenant_id: str = Depends(require_tenant_access),
+    pipeline: RAGPipeline = Depends(get_pipeline),
+):
     """Execute RAG query for document retrieval and answer generation."""
     try:
-        logger.info(f"Processing query for tenant {tenant_id}: {request.query}")
+        logger.info(f"Processing query for tenant {tenant_id}")
 
         # Execute RAG pipeline
-        result = await rag_pipeline.query(
+        result = await pipeline.query(
             tenant_id=tenant_id,
             query=request.query,
             top_k=request.top_k
@@ -89,25 +133,88 @@ async def query(tenant_id: str, request: QueryRequest):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
-@app.post("/api/v1/{tenant_id}/documents/upload")
-async def upload_documents(tenant_id: str):
-    """Upload documents for indexing."""
-    return {
-        "status": "not_implemented",
-        "message": "Document upload not yet implemented"
-    }
+@app.post("/api/v1/{tenant_id}/documents/upload", response_model=DocumentUploadResponse)
+async def upload_documents(
+    file: UploadFile = File(...),
+    document_type: Optional[str] = Form(None),
+    tenant_id: str = Depends(require_tenant_access),
+    indexer: DocumentIndexer = Depends(get_indexer),
+):
+    """Upload a pdf/docx/txt/csv/json document; it is chunked, embedded and indexed for the tenant."""
+    filename = sanitize_filename(file.filename)
+    ext = document_type_from_filename(filename)
+    if ext not in DocumentProcessor.SUPPORTED_FORMATS:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported file type '{ext}'. Supported: {', '.join(DocumentProcessor.SUPPORTED_FORMATS)}",
+        )
+    if document_type and document_type.lower() != ext:
+        raise HTTPException(status_code=415, detail=f"document_type '{document_type}' does not match file extension '{ext}'")
+
+    max_bytes = settings.MAX_DOCUMENT_SIZE_MB * 1024 * 1024
+    data = await file.read(max_bytes + 1)
+    if len(data) > max_bytes:
+        raise HTTPException(status_code=413, detail=f"File exceeds {settings.MAX_DOCUMENT_SIZE_MB} MB limit")
+    if not data:
+        raise HTTPException(status_code=422, detail="Uploaded file is empty")
+
+    try:
+        result = await indexer.index_document(tenant_id, filename, data, ext)
+    except DocumentParseError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except EmbeddingError as e:
+        logger.error(f"Embedding failed during upload for tenant {tenant_id}: {e}")
+        raise HTTPException(status_code=503, detail="Embedding service unavailable")
+    except Exception as e:
+        logger.error(f"Indexing failed for tenant {tenant_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=503, detail="Vector store unavailable")
+    return DocumentUploadResponse(status="indexed", **result)
 
 
 @app.get("/api/v1/{tenant_id}/documents", response_model=DocumentListResponse)
-async def list_documents(tenant_id: str, skip: int = 0, limit: int = 50):
+async def list_documents(
+    skip: int = 0,
+    limit: int = 50,
+    tenant_id: str = Depends(require_tenant_access),
+    indexer: DocumentIndexer = Depends(get_indexer),
+):
     """List indexed documents for a tenant."""
-    return DocumentListResponse(documents=[], total_count=0)
+    try:
+        docs = await indexer.store.list_documents(tenant_id)
+    except Exception as e:
+        logger.error(f"List failed for tenant {tenant_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=503, detail="Vector store unavailable")
+    page = docs[max(skip, 0): max(skip, 0) + max(limit, 0)]
+    return DocumentListResponse(
+        documents=[
+            DocumentInfo(
+                document_id=d.document_id,
+                document_name=d.document_name,
+                upload_date=d.upload_date,
+                chunk_count=d.chunk_count,
+                file_size_bytes=d.file_size_bytes,
+            )
+            for d in page
+        ],
+        total_count=len(docs),
+    )
 
 
-@app.delete("/api/v1/{tenant_id}/documents/{document_id}")
-async def delete_document(tenant_id: str, document_id: str):
-    """Delete a document from the index."""
-    return {"status": "not_implemented"}
+@app.delete("/api/v1/{tenant_id}/documents/{document_id}", response_model=DocumentDeleteResponse)
+async def delete_document(
+    document_id: str,
+    tenant_id: str = Depends(require_tenant_access),
+    indexer: DocumentIndexer = Depends(get_indexer),
+):
+    """Delete a document (all its chunks) from the tenant's index."""
+    try:
+        removed = await indexer.delete_document(tenant_id, document_id)
+    except Exception as e:
+        logger.error(f"Delete failed for tenant {tenant_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=503, detail="Vector store unavailable")
+    if removed == 0:
+        raise HTTPException(status_code=404, detail="Document not found")
+    return DocumentDeleteResponse(status="deleted", document_id=document_id, chunks_deleted=removed)
 
 
 if __name__ == "__main__":
