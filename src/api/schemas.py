@@ -8,6 +8,9 @@ class QueryRequest(BaseModel):
     """User query request."""
     query: str = Field(..., min_length=1, max_length=2000)
     top_k: int = Field(5, ge=1, le=20)
+    domain: Optional[str] = Field(
+        None, description="Industry domain for this request; defaults to the configured DOMAIN."
+    )
 
 
 class SourceDocument(BaseModel):
@@ -53,3 +56,21 @@ class HealthCheck(BaseModel):
     status: str
     version: str
     components: dict
+
+
+class DomainInfo(BaseModel):
+    """One selectable industry domain."""
+    name: str
+    description: str
+    preferred_model: Optional[str] = None
+    fallback_models: List[str] = []
+    corpus_dir: str
+    audit_logger: Optional[str] = None
+    task_prompts: List[str] = []
+    retrieval: dict = {}
+
+
+class DomainListResponse(BaseModel):
+    """Available domains and the active (configured) one."""
+    active: str
+    domains: List[DomainInfo]

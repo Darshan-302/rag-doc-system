@@ -5,7 +5,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
-from src.api.schemas import QueryRequest, QueryResponse, DocumentListResponse, HealthCheck
+from src.api.schemas import (
+    QueryRequest, QueryResponse, DocumentListResponse, HealthCheck,
+    DomainInfo, DomainListResponse,
+)
+from src.domains import DomainError, get_domain_profile, list_domains, log_query_access
 from src.rag.pipeline import RAGPipeline
 
 # Logging setup
@@ -31,6 +35,17 @@ app.add_middleware(
 
 # Initialize RAG pipeline
 rag_pipeline = RAGPipeline()
+_domain_pipelines = {rag_pipeline.domain_profile.name: rag_pipeline}
+
+
+def _pipeline_for(domain):
+    """Pipeline for a per-request domain (lazily created, cached)."""
+    if domain is None:
+        return rag_pipeline
+    profile = get_domain_profile(domain)  # raises DomainError for unknown names
+    if profile.name not in _domain_pipelines:
+        _domain_pipelines[profile.name] = RAGPipeline(domain=profile.name)
+    return _domain_pipelines[profile.name]
 
 
 @app.on_event("startup")
@@ -57,8 +72,18 @@ async def health_check():
             "database": "configured",
             "vector_db": "configured",
             "llm": settings.LLM_MODEL,
+            "domain": settings.DOMAIN,
             "cache": "configured",
         },
+    )
+
+
+@app.get("/api/v1/domains", response_model=DomainListResponse)
+async def get_domains():
+    """List available industry domains and the active one."""
+    return DomainListResponse(
+        active=settings.DOMAIN,
+        domains=[DomainInfo(**get_domain_profile(n).to_summary()) for n in list_domains()],
     )
 
 
@@ -66,16 +91,28 @@ async def health_check():
 async def query(tenant_id: str, request: QueryRequest):
     """Execute RAG query for document retrieval and answer generation."""
     try:
+        pipeline = _pipeline_for(request.domain)
+    except DomainError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    try:
         logger.info(f"Processing query for tenant {tenant_id}: {request.query}")
 
         # Execute RAG pipeline
-        result = await rag_pipeline.query(
+        result = await pipeline.query(
             tenant_id=tenant_id,
             query=request.query,
             top_k=request.top_k
         )
 
         logger.info(f"Query completed in {result.latency_ms}ms")
+
+        log_query_access(
+            pipeline.domain_profile,
+            tenant_id,
+            request.query,
+            [str(src.get("document_id", "unknown")) for src in result.sources],
+        )
 
         return QueryResponse(
             answer=result.answer,

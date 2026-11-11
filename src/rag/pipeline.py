@@ -15,6 +15,7 @@ from src.models.registry import (
     NoSuitableModelError,
 )
 from src.models.resources import get_available_ram_gb
+from src.domains import build_prompt, check_escalation, finalize_answer, get_domain_profile
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ class RAGPipeline:
         model: Optional[str] = None,
         registry: Optional[ModelRegistry] = None,
         available_ram_gb: Optional[float] = None,
+        domain: Optional[str] = None,
     ):
         """Initialize RAG pipeline components.
 
@@ -57,7 +59,11 @@ class RAGPipeline:
             available_ram_gb: RAM/VRAM figure (GB) to validate the model
                 against. Defaults to settings.RAM_AVAILABLE_GB, falling back
                 to an auto-detected value (issue #5).
+            domain: Industry domain (general/insurance/healthcare/finance)
+                whose prompts and safety behaviour to use. Defaults to
+                settings.DOMAIN.
         """
+        self.domain_profile = get_domain_profile(domain or settings.DOMAIN)
         self.ollama_url = settings.OLLAMA_BASE_URL
         self.embedding_model = settings.EMBEDDING_MODEL
         self.client = httpx.AsyncClient()
@@ -193,14 +199,14 @@ class RAGPipeline:
 
     async def _generate_answer(self, query: str, context: str) -> str:
         """Generate answer using Ollama."""
-        prompt = f"""Based on the following documents, answer the user's question.
-
-Documents:
-{context}
-
-Question: {query}
-
-Answer:"""
+        profile = self.domain_profile
+        emergency = check_escalation(profile, query)
+        if emergency:
+            return emergency
+        prompt = build_prompt(profile, query, context)
+        temperature = settings.LLM_TEMPERATURE
+        if profile.temperature is not None and "LLM_TEMPERATURE" not in settings.model_fields_set:
+            temperature = profile.temperature
 
         try:
             response = await self.client.post(
@@ -209,7 +215,7 @@ Answer:"""
                     "model": self.llm_model,
                     "prompt": prompt,
                     "stream": False,
-                    "temperature": settings.LLM_TEMPERATURE,
+                    "temperature": temperature,
                     "top_p": settings.LLM_TOP_P,
                 },
                 timeout=30.0
@@ -217,7 +223,7 @@ Answer:"""
 
             if response.status_code == 200:
                 result = response.json()
-                return result.get("response", "Unable to generate answer").strip()
+                return finalize_answer(profile, result.get("response", "Unable to generate answer").strip())
             else:
                 return f"Error from LLM: {response.status_code}"
 
