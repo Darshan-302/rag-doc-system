@@ -3,6 +3,8 @@
 import asyncio
 import logging
 import re
+import socket
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
@@ -159,6 +161,19 @@ class InMemoryVectorStore(VectorStore):
         return _summarise(self._data.get(tenant_id, []))
 
 
+class VectorStoreUnavailable(ConnectionError):
+    """The vector store cannot be reached; callers should degrade, not retry."""
+
+
+# The weaviate client retries internally for tens of seconds when the server
+# is down, which would stall every request. After a failed probe or call we
+# fail fast for a short cooldown instead.
+UNAVAILABLE_COOLDOWN_S = 15.0
+PROBE_INTERVAL_S = 5.0
+PROBE_TIMEOUT_S = 2.0
+_CONNECTION_ERROR_MARKERS = ("failed to connect", "connection refused", "unavailable", "connection error", "timed out")
+
+
 class WeaviateVectorStore(VectorStore):
     """Weaviate v4 store with one native Weaviate tenant per ``tenant_id``.
 
@@ -179,6 +194,47 @@ class WeaviateVectorStore(VectorStore):
         self.collection_name = collection or settings.WEAVIATE_COLLECTION
         self._client = None
         self._known_tenants: set = set()
+        self._down_until = 0.0
+        self._last_ok = 0.0
+
+    # -- availability guard ----------------------------------------------
+    def _mark_down(self) -> None:
+        self._down_until = time.monotonic() + UNAVAILABLE_COOLDOWN_S
+        client, self._client = self._client, None
+        self._known_tenants.clear()
+        if client is not None:
+            try:
+                client.close()
+            except Exception:  # pragma: no cover - best effort
+                pass
+
+    def _probe(self) -> None:
+        """Cheap TCP check of the HTTP and gRPC ports (no weaviate client retries)."""
+        parsed = urlparse(self.url)
+        host = parsed.hostname or "localhost"
+        http_port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        for port in (http_port, self.grpc_port):
+            socket.create_connection((host, port), timeout=PROBE_TIMEOUT_S).close()
+
+    def _call(self, fn, *args):
+        now = time.monotonic()
+        if now < self._down_until:
+            raise VectorStoreUnavailable("Weaviate is unavailable (recently failed); retrying shortly")
+        if now - self._last_ok > PROBE_INTERVAL_S:
+            try:
+                self._probe()
+            except OSError as e:
+                self._mark_down()
+                raise VectorStoreUnavailable(f"Weaviate unreachable: {e}") from e
+        try:
+            result = fn(*args)
+        except Exception as e:
+            if any(m in str(e).lower() for m in _CONNECTION_ERROR_MARKERS):
+                self._mark_down()
+                raise VectorStoreUnavailable(f"Weaviate connection failed: {type(e).__name__}") from e
+            raise
+        self._last_ok = time.monotonic()
+        return result
 
     # -- connection -------------------------------------------------------
     def _connect(self):
@@ -323,16 +379,16 @@ class WeaviateVectorStore(VectorStore):
 
     # -- async interface --------------------------------------------------
     async def add_chunks(self, tenant_id: str, chunks: List[ChunkRecord]) -> int:
-        return await asyncio.to_thread(self._add, tenant_id, chunks)
+        return await asyncio.to_thread(self._call, self._add, tenant_id, chunks)
 
     async def search(self, tenant_id: str, embedding: List[float], top_k: int) -> List[SearchHit]:
-        return await asyncio.to_thread(self._search, tenant_id, embedding, top_k)
+        return await asyncio.to_thread(self._call, self._search, tenant_id, embedding, top_k)
 
     async def get_chunks(self, tenant_id: str) -> List[ChunkRecord]:
-        return await asyncio.to_thread(self._get_chunks, tenant_id)
+        return await asyncio.to_thread(self._call, self._get_chunks, tenant_id)
 
     async def delete_document(self, tenant_id: str, document_id: str) -> int:
-        return await asyncio.to_thread(self._delete, tenant_id, document_id)
+        return await asyncio.to_thread(self._call, self._delete, tenant_id, document_id)
 
     async def list_documents(self, tenant_id: str) -> List[DocumentSummary]:
         return _summarise(await self.get_chunks(tenant_id))
