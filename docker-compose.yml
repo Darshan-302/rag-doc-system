@@ -47,7 +47,7 @@ services:
 
   # Weaviate Vector Database
   weaviate:
-    image: semitechnologies/weaviate:1.25.0
+    image: semitechnologies/weaviate:1.28.2
     container_name: rag_weaviate
     ports:
       - "8080:8080"
