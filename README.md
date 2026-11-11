@@ -218,16 +218,62 @@ python -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 # Access API docs: http://localhost:8000/docs
 ```
 
-### 6. Test Query
+### 6. Upload a Document and Query It
+
+API authentication is **on by default**. `cp .env.example .env` (step 1) sets a
+development key, `dev-key-change-me`, that is authorised for `default-tenant`;
+send it in the `X-API-Key` header. Without a key the API returns `401`; a key
+used on a tenant it isn't authorised for returns `403`.
 
 ```bash
+# Upload (pdf, docx, txt, csv, json; max MAX_DOCUMENT_SIZE_MB)
+curl -X POST "http://localhost:8000/api/v1/default-tenant/documents/upload" \
+  -H "X-API-Key: dev-key-change-me" \
+  -F "file=@policy_document.pdf"
+
+# Query
 curl -X POST "http://localhost:8000/api/v1/default-tenant/query" \
+  -H "X-API-Key: dev-key-change-me" \
   -H "Content-Type: application/json" \
   -d '{
     "query": "What are the main features of the product?",
     "top_k": 5
   }'
 ```
+
+Uploading needs Weaviate (`docker-compose up -d weaviate`) and Ollama with the
+embedding model (`ollama pull nomic-embed-text`). Queries fall back to keyword
+search over the bundled sample corpus (`data/processed/rag_training_data.jsonl`)
+with a logged warning if Weaviate or Ollama can't be reached, or when the tenant
+has no documents yet. To run without Weaviate/Ollama for development, set
+`VECTOR_STORE=memory` and `EMBEDDER=hashing` (in-process, lost on restart).
+
+### Authentication and tenants
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `AUTH_ENABLED` | `true` | Require `X-API-Key` on `/api/v1/{tenant_id}/...`. `/health` is always public. Set `false` for local development only. |
+| `API_KEYS` | empty | `key1=tenantA,tenantB;key2=*` - each key lists the tenants it may access; `*` means all. With auth enabled and no keys configured every request gets `401`. |
+
+Generate keys with `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
+Keys are compared in constant time. Each `tenant_id` maps to its own Weaviate
+tenant, so one tenant's chunks are never searched for another; ids must match
+`[A-Za-z0-9][A-Za-z0-9_-]{0,62}`.
+
+**Upgrade note:** auth defaulting to on is a breaking change for existing
+callers; add `API_KEYS` and send `X-API-Key`, or set `AUTH_ENABLED=false`.
+
+### Retrieval settings
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `RETRIEVAL_MODE` | `hybrid` | `keyword` (BM25), `vector`, or `hybrid` (BM25 + vector, Reciprocal Rank Fusion) |
+| `VECTOR_STORE` | `weaviate` | `weaviate` or `memory` |
+| `EMBEDDER` | `ollama` | `ollama` (`EMBEDDING_MODEL`) or `hashing` (offline, lexical) |
+| `SAMPLE_CORPUS_PATH` | `data/processed/rag_training_data.jsonl` | Demo corpus used as a fallback; blank disables |
+
+Measure retrieval quality with `PYTHONPATH=. python scripts/eval_retrieval.py`
+(offline) or add `--ollama` for real embeddings.
 
 ## 📁 Project Structure
 
@@ -287,21 +333,21 @@ rag-system/
 
 ### 1. RAG Pipeline (`src/rag/pipeline.py`)
 Main orchestration:
-- Query → Embedding
-- Vector search → Hybrid ranking
-- LLM generation → Source attribution
+- Query → tenant-scoped hybrid retrieval (`src/search/hybrid.py`)
+- LLM generation → Source attribution (with real relevance scores)
+- Falls back to keyword search over the sample corpus if the vector store is unreachable
 
 ### 2. Document Ingestion (`src/ingestion/`)
 Multi-format parsing:
-- PDF, DOCX, CSV, JSON, images
-- Semantic chunking (512 tokens, 50 token overlap)
-- Async batch processing with Celery
+- PDF, DOCX, TXT, CSV, JSON (images/OCR not implemented)
+- Word-window chunking (`CHUNK_SIZE` / `CHUNK_OVERLAP`, tokens approximated by words)
+- Embeds via Ollama and indexes into the tenant's Weaviate tenant (synchronous in the upload request; Celery is not wired up)
 
 ### 3. Vector Search (`src/search/`)
 Hybrid retrieval:
-- Semantic search (Weaviate HNSW)
-- BM25 keyword search
-- Cross-encoder reranking (top-5)
+- Semantic search (Weaviate HNSW, cosine) or in-memory store for dev/tests
+- BM25 keyword search (rank-bm25)
+- Reciprocal Rank Fusion of the two (cross-encoder reranking is not implemented)
 
 ### 4. LLM Inference (`src/rag/llm.py`)
 Answer generation:
@@ -309,12 +355,10 @@ Answer generation:
 - Few-shot prompting
 - Token batching for throughput
 
-### 5. Multi-Tenancy (`src/security/tenant_isolation.py`)
-Complete isolation:
-- JWT-based tenant routing
-- Per-tenant Weaviate collections
-- Separate PostgreSQL schemas
-- Audit logging
+### 5. Multi-Tenancy & Auth (`src/security/auth.py`)
+- API-key auth (`X-API-Key`) with keys mapped to allowed tenants
+- Native Weaviate multi-tenancy: one Weaviate tenant per `tenant_id`
+- Planned, not implemented: JWT routing, separate PostgreSQL schemas
 
 ## 📊 Performance Targets
 
@@ -362,6 +406,8 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed plan.
 
 ## 📚 API Examples
 
+All `/api/v1/{tenant_id}/...` calls require `X-API-Key` (see Authentication above).
+
 ### Query Documents
 
 ```bash
@@ -376,8 +422,9 @@ Response:
   "answer": "We offer three pricing tiers...",
   "sources": [
     {
-      "document_id": "doc-001",
-      "document_name": "Pricing Guide",
+      "document_id": "3f2a9c...",
+      "document_name": "pricing_guide.pdf",
+      "chunk_id": 2,
       "score": 0.92,
       "text": "..."
     }
@@ -387,15 +434,20 @@ Response:
 }
 ```
 
+`score` is normalised to 0-1 (hybrid: RRF score relative to a rank-1 match in both lists).
+
 ### Upload Documents
 
 ```bash
-POST /api/v1/{tenant_id}/documents/upload
-Content-Type: multipart/form-data
+curl -X POST http://localhost:8000/api/v1/{tenant_id}/documents/upload \
+  -H "X-API-Key: $API_KEY" -F "file=@policy_document.pdf"
 
-file: policy_document.pdf
-document_type: pdf
+Response: {"status": "indexed", "document_id": "3f2a9c...", "document_name": "policy_document.pdf",
+           "chunk_count": 14, "file_size_bytes": 52113}
 ```
+
+`415` for unsupported types, `413` over `MAX_DOCUMENT_SIZE_MB`, `422` for
+empty/unparseable files, `503` if the embedder or vector store is unreachable.
 
 ### List Documents
 
@@ -406,7 +458,7 @@ GET /api/v1/{tenant_id}/documents?skip=0&limit=50
 ### Delete Document
 
 ```bash
-DELETE /api/v1/{tenant_id}/documents/{document_id}
+DELETE /api/v1/{tenant_id}/documents/{document_id}   # removes all chunks; 404 if unknown
 ```
 
 ## 🧪 Testing
@@ -415,8 +467,11 @@ DELETE /api/v1/{tenant_id}/documents/{document_id}
 # Run unit tests
 pytest tests/unit -v
 
-# Run integration tests
+# Run integration tests (in-memory store, offline)
 pytest tests/integration -v
+
+# Live tests against real Weaviate + Ollama (skipped by default)
+RUN_LIVE_TESTS=1 pytest -m live -v
 
 # Run performance benchmarks
 pytest tests/performance -v
