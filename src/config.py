@@ -9,6 +9,7 @@ VALID_MODEL_SIZES = ("small", "medium", "large")
 VALID_RETRIEVAL_MODES = ("keyword", "vector", "hybrid")
 VALID_VECTOR_STORES = ("weaviate", "memory")
 VALID_EMBEDDERS = ("ollama", "hashing")
+VALID_DOMAINS = ("general", "insurance", "healthcare", "finance")
 
 
 class Settings(BaseSettings):
@@ -35,6 +36,10 @@ class Settings(BaseSettings):
     WEAVIATE_API_KEY: str = "weaviate-key"
     WEAVIATE_GRPC_PORT: int = 50051
     WEAVIATE_COLLECTION: str = "DocumentChunk"
+
+    # Industry domain: selects prompts/model recommendations/audit hook from
+    # src/domains (general, insurance, healthcare, finance).
+    DOMAIN: str = "general"
 
     # LLM (Ollama)
     OLLAMA_BASE_URL: str = "http://localhost:11434"
@@ -140,6 +145,16 @@ class Settings(BaseSettings):
         if isinstance(value, str) and value.strip() == "":
             return None
         return value
+
+    @field_validator("DOMAIN", mode="before")
+    @classmethod
+    def _validate_domain(cls, value):
+        normalized = str(value).strip().lower() if value is not None else ""
+        if normalized == "":
+            return "general"
+        if normalized not in VALID_DOMAINS:
+            raise ValueError(f"DOMAIN must be one of {VALID_DOMAINS}, got '{value}'")
+        return normalized
 
     @field_validator("QUANTIZATION_METHOD")
     @classmethod

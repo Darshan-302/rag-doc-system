@@ -22,6 +22,13 @@ ML models — see each feature's "Status" note.
 
 ---
 
+> **Runtime selection:** set `DOMAIN=insurance` (see README, "Selecting an industry
+> domain") to make the API load `config/insurance_prompts.yaml` into the generation
+> prompt and `config/insurance_models.yaml` as model/retrieval recommendations, and to
+> route query access events to this domain's audit hook when `INSURANCE_AUDIT_LOGGING_ENABLED=true`.
+> Retrieval parameters in the models file are exposed via `GET /api/v1/domains` but
+> not yet applied by the retrieval code.
+
 ## 1. Insurance-Specific Data Sources
 
 The pipeline can ingest the following insurance document categories. Fictional sample
@@ -53,15 +60,13 @@ To use the insurance-tuned configuration instead of the defaults:
 # Point the pipeline at the insurance-specific config files
 export INSURANCE_CONFIG_MODELS_PATH=config/insurance_models.yaml
 export INSURANCE_CONFIG_PROMPTS_PATH=config/insurance_prompts.yaml
-
-# Load the fictional sample insurance documents (for local testing/demo only)
-python scripts/load_test_data.py --source data/insurance/
 ```
 
-> Note: `scripts/load_test_data.py` loads generic test fixtures today; passing a
-> `--source` directory is illustrative of the intended usage pattern for insurance
-> data. Wire up the actual insurance-specific loading logic (reading the JSON
-> shape shown in `data/insurance/`) as part of adopting this guide in your fork.
+> Note: there is no insurance-specific loader script yet. The sample files in
+> `data/insurance/` use a nested JSON shape; to index them, flatten the text you
+> want searchable into a CSV/JSON/JSONL file and ingest it with
+> `scripts/ingest_external_dataset.py --source local --path <file> --text-column <col>`,
+> or write a small loader for your own document shape.
 
 See [`config/insurance.env.example`](../config/insurance.env.example) for the full
 list of insurance-specific environment variables (model selection, chunking, HIPAA

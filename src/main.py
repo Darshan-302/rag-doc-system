@@ -12,10 +12,13 @@ from src.api.schemas import (
     DocumentInfo,
     DocumentListResponse,
     DocumentUploadResponse,
+    DomainInfo,
+    DomainListResponse,
     HealthCheck,
     QueryRequest,
     QueryResponse,
 )
+from src.domains import DomainError, get_domain_profile, list_domains, log_query_access
 from src.ingestion.document_processor import DocumentParseError, DocumentProcessor
 from src.rag.embeddings import EmbeddingError
 from src.rag.indexing import DocumentIndexer, document_type_from_filename, sanitize_filename
@@ -61,6 +64,27 @@ def get_indexer() -> DocumentIndexer:
     return _indexer
 
 
+_domain_pipelines = {}
+
+
+def _pipeline_for(domain: Optional[str], default: RAGPipeline) -> RAGPipeline:
+    """Pipeline for a per-request domain (lazily created, cached).
+
+    Domain pipelines share the default pipeline's retriever, so they see the
+    same tenant-scoped store and embedder.
+    """
+    if domain is None:
+        return default
+    profile = get_domain_profile(domain)  # raises DomainError for unknown names
+    if profile.name == default.domain_profile.name:
+        return default
+    cached = _domain_pipelines.get(profile.name)
+    if cached is None or cached.retriever is not default.retriever:
+        cached = RAGPipeline(domain=profile.name, retriever=default.retriever)
+        _domain_pipelines[profile.name] = cached
+    return cached
+
+
 @app.on_event("startup")
 async def startup():
     """Initialize services on startup."""
@@ -97,8 +121,18 @@ async def health_check():
             "database": "configured",
             "vector_db": "configured",
             "llm": settings.LLM_MODEL,
+            "domain": settings.DOMAIN,
             "cache": "configured",
         },
+    )
+
+
+@app.get("/api/v1/domains", response_model=DomainListResponse)
+async def get_domains():
+    """List available industry domains and the active one."""
+    return DomainListResponse(
+        active=settings.DOMAIN,
+        domains=[DomainInfo(**get_domain_profile(n).to_summary()) for n in list_domains()],
     )
 
 
@@ -110,6 +144,11 @@ async def query(
 ):
     """Execute RAG query for document retrieval and answer generation."""
     try:
+        pipeline = _pipeline_for(request.domain, pipeline)
+    except DomainError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    try:
         logger.info(f"Processing query for tenant {tenant_id}")
 
         # Execute RAG pipeline
@@ -120,6 +159,13 @@ async def query(
         )
 
         logger.info(f"Query completed in {result.latency_ms}ms")
+
+        log_query_access(
+            pipeline.domain_profile,
+            tenant_id,
+            request.query,
+            [str(src.get("document_id", "unknown")) for src in result.sources],
+        )
 
         return QueryResponse(
             answer=result.answer,

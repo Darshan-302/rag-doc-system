@@ -9,6 +9,13 @@
 > professionals**. All sample data referenced from this guide (see
 > [`data/healthcare/`](../data/healthcare/)) is synthetic and fictional.
 
+> **Runtime selection:** set `DOMAIN=healthcare` (see README, "Selecting an industry
+> domain") to make the API load `config/healthcare_prompts.yaml` into the generation
+> prompt and `config/healthcare_models.yaml` as model/retrieval recommendations, and to
+> route query access events to this domain's audit hook when `HIPAA_AUDIT_LOGGING_ENABLED=true`.
+> Retrieval parameters in the models file are exposed via `GET /api/v1/domains` but
+> not yet applied by the retrieval code.
+
 ## 1. Overview
 
 This document describes how the `feature/healthcare-rag-pipeline` work extends
