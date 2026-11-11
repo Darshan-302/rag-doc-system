@@ -33,6 +33,22 @@ class DocumentUploadRequest(BaseModel):
     document_type: str = Field(..., pattern="^(pdf|docx|txt|csv|json)$")
 
 
+class DocumentUploadResponse(BaseModel):
+    """Result of indexing an uploaded document."""
+    status: str
+    document_id: str
+    document_name: str
+    chunk_count: int
+    file_size_bytes: int
+
+
+class DocumentDeleteResponse(BaseModel):
+    """Result of deleting a document."""
+    status: str
+    document_id: str
+    chunks_deleted: int
+
+
 class DocumentInfo(BaseModel):
     """Document metadata."""
     document_id: str
