@@ -229,6 +229,31 @@ curl -X POST "http://localhost:8000/api/v1/default-tenant/query" \
   }'
 ```
 
+## Selecting an industry domain
+
+The `DOMAIN` environment variable (`general` default, `insurance`, `healthcare`, `finance`; invalid values fail at startup) selects which prompts and safety behaviour the pipeline uses.
+
+| Domain | Prompts | Model recommendations | Default corpus | Audit hook (opt-in env flag) |
+|---|---|---|---|---|
+| `general` | `config/prompts.yaml` | `config/models.yaml` | `data/processed` | none |
+| `insurance` | `config/insurance_prompts.yaml` | `config/insurance_models.yaml` | `data/insurance` | `src/security/insurance_audit_log.py` (`INSURANCE_AUDIT_LOGGING_ENABLED`) |
+| `healthcare` | `config/healthcare_prompts.yaml` | `config/healthcare_models.yaml` | `data/healthcare` | `src/security/healthcare_audit_log.py` (`HIPAA_AUDIT_LOGGING_ENABLED`) |
+| `finance` | `config/finance_prompts.yaml` | `config/finance_models.yaml` | `data/finance` | `src/compliance/audit_log.py` (`FINANCE_AUDIT_LOGGING_ENABLED`) |
+
+```bash
+DOMAIN=healthcare python -m uvicorn src.main:app --port 8000   # or set DOMAIN in .env
+curl http://localhost:8000/api/v1/domains                      # available + active domain
+# per-request override (validated against the supported list):
+curl -X POST localhost:8000/api/v1/default-tenant/query -H "Content-Type: application/json" \
+  -d '{"query": "What is KYC?", "domain": "finance"}'
+```
+
+What is loaded: the domain system prompt, few-shot examples and any safety rules in the prompt YAML are assembled into the generation prompt (`src/domains/prompts.py`). Healthcare additionally appends its medical disclaimer to answers and returns a static emergency-care message (no LLM call) when a query matches an escalation keyword (an illustrative, not medically validated, list). Domain `*_models.yaml` files are treated as recommendations: each model key maps to a `config/models.yaml` key (`qwen_32b_finance` -> `qwen_32b`) and is shown by `/api/v1/domains`, but the model actually used is still chosen by `LLM_MODEL` / `MODEL_FALLBACK_CHAIN`. The domain's default temperature applies only when `LLM_TEMPERATURE` is not set.
+
+Audit logging is off unless the domain's flag is set in the process environment (path variables: `INSURANCE_AUDIT_LOG_PATH`, `HIPAA_AUDIT_LOG_PATH`, `FINANCE_AUDIT_LOG_PATH`). Events record tenant, action and document IDs; insurance and healthcare hooks never receive query text, and the finance hook stores only its own masked, truncated preview. Per-domain sample env files: `config/insurance.env.example`, `.env.healthcare.example`, `config/finance.env.example`.
+
+Limitations: domain corpus paths and retrieval tuning (chunk size, top_k, thresholds) are loaded and reported but not yet applied by retrieval; the pipeline still reads `data/processed/rag_training_data.jsonl`. These domains are sample/reference configurations, not compliance certification.
+
 ## 📁 Project Structure
 
 ```

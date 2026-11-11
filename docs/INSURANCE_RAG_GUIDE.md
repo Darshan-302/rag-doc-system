@@ -22,6 +22,13 @@ ML models — see each feature's "Status" note.
 
 ---
 
+> **Runtime selection:** set `DOMAIN=insurance` (see README, "Selecting an industry
+> domain") to make the API load `config/insurance_prompts.yaml` into the generation
+> prompt and `config/insurance_models.yaml` as model/retrieval recommendations, and to
+> route query access events to this domain's audit hook when `INSURANCE_AUDIT_LOGGING_ENABLED=true`.
+> Retrieval parameters in the models file are exposed via `GET /api/v1/domains` but
+> not yet applied by the retrieval code.
+
 ## 1. Insurance-Specific Data Sources
 
 The pipeline can ingest the following insurance document categories. Fictional sample

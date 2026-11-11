@@ -8,6 +8,13 @@
 > compliance, and security professionals before handling real customer or
 > regulatory data.
 
+> **Runtime selection:** set `DOMAIN=finance` (see README, "Selecting an industry
+> domain") to make the API load `config/finance_prompts.yaml` into the generation
+> prompt and `config/finance_models.yaml` as model/retrieval recommendations, and to
+> route query access events to this domain's audit hook when `FINANCE_AUDIT_LOGGING_ENABLED=true`.
+> Retrieval parameters in the models file are exposed via `GET /api/v1/domains` but
+> not yet applied by the retrieval code.
+
 ## 1. Overview
 
 This guide documents how to configure and reason about a **finance industry
